@@ -31,6 +31,9 @@ import pbclient
 import json
 import StringIO
 import csv
+import ConfigParser
+import os.path
+from os.path import expanduser
 from helpers import *
 from requests import exceptions
 
@@ -45,25 +48,37 @@ class Config(object):
         self.server = None
         self.api_key = None
         self.pbclient = pbclient
+        self.parser = ConfigParser.ConfigParser()
 
 pass_config = click.make_pass_decorator(Config, ensure=True)
 
 
 @click.group()
 @click.option('--verbose', is_flag=True)
-@click.option('--server',  help='The PyBossa server', default='http://localhost:5000')
-@click.option('--api-key', help='Your PyBossa API-KEY', default=None)
+@click.option('--server',  help='The PyBossa server')
+@click.option('--api-key', help='Your PyBossa API-KEY')
+@click.option('--credentials', help='Use your PyBossa credentials in .pybossa.cfg file',
+              default="default")
 @click.option('--project', type=click.File('r'), default='project.json')
 @pass_config
-def cli(config, verbose, server, api_key, project):
+def cli(config, verbose, server, api_key, credentials, project):
     """Create the cli command line."""
+    # Check first for the pybossa.rc file to configure server and api-key
+    home = expanduser("~")
+    if os.path.isfile(os.path.join(home, '.pybossa.cfg')):
+        config.parser.read(os.path.join(home, '.pybossa.cfg'))
+        config.server = config.parser.get(credentials,'server')
+        config.api_key = config.parser.get(credentials, 'apikey')
     config.verbose = verbose
-    config.server = server
-    config.api_key = api_key
+    if server:
+        config.server = server
+    if api_key:
+        config.api_key = api_key
     config.project = json.loads(project.read())
     config.pbclient = pbclient
     config.pbclient.set('endpoint', config.server)
     config.pbclient.set('api_key', config.api_key)
+    click.echo("Config done!")
 
 
 @cli.command()
@@ -71,10 +86,11 @@ def cli(config, verbose, server, api_key, project):
 def create_project(config):
     """Create the PyBossa project."""
     try:
-        response = pbclient.create_app(config.project['name'],
-                                       config.project['short_name'],
-                                       config.project['description'])
+        response = config.pbclient.create_app(config.project['name'],
+                                              config.project['short_name'],
+                                              config.project['description'])
         check_api_error(response)
+        click.echo("Project: %s created!" % config.project['short_name'])
     except exceptions.ConnectionError:
         click.echo("Connection Error! The server %s is not responding" % config.server)
     except:
@@ -166,7 +182,7 @@ def delete_tasks(config, task_id):
         if task_id:
             response = config.pbclient.delete_task(task_id)
             check_api_error(response)
-        else:
+        elif click.confirm("Are you sure you want to delete all the tasks and associated task runs?"):
             limit = 100
             offset = 0
             tasks = config.pbclient.get_tasks(project.id, limit, offset)
