@@ -7,9 +7,9 @@ from nose.tools import assert_raises
 from requests import exceptions
 
 
-class Test(object):
+class TestHelpers(object):
 
-    """Test class for pbs."""
+    """Test class for pbs.helpers."""
 
     error = {"action": "GET",
              "exception_cls": "NotFound",
