@@ -55,7 +55,7 @@ def format_error(module, error):
     logging.error(module)
     # Beautify JSON error
     if type(error) == list:
-        print "Application not found"
+        print "Project not found"
     else:
         print json.dumps(error, sort_keys=True, indent=4, separators=(',', ': '))
     exit(1)
