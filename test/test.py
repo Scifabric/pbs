@@ -9,6 +9,7 @@ from requests import exceptions
 class Test(object):
 
     """Test class for pbs."""
+
     error = {"action": "GET",
              "exception_cls": "NotFound",
              "exception_msg": "(NotFound)",
