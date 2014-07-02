@@ -15,23 +15,39 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with PyBOSSA.  If not, see <http://www.gnu.org/licenses/>.
+"""
+A very simple PyBossa command line client.
 
+This module is a pybossa-client that runs the following commands:
+
+    * create_project: to create a PyBossa proejct
+    * add_tasks: to add tasks to an existing project
+    * delete_tasks: to delete all tasks and task_runs from an existing project
+
+"""
 
 import click
 import pbclient
 import json
-import logging
+import StringIO
+import csv
+from helpers import *
 from requests import exceptions
+
 
 class Config(object):
 
+    """Config class for the command line."""
+
     def __init__(self):
+        """Init the configuration default values."""
         self.verbose = False
         self.server = None
         self.api_key = None
         self.pbclient = pbclient
 
 pass_config = click.make_pass_decorator(Config, ensure=True)
+
 
 @click.group()
 @click.option('--verbose', is_flag=True)
@@ -40,6 +56,7 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
 @click.option('--project', type=click.File('r'), default='project.json')
 @pass_config
 def cli(config, verbose, server, api_key, project):
+    """Create the cli command line."""
     config.verbose = verbose
     config.server = server
     config.api_key = api_key
@@ -76,7 +93,8 @@ def update_project(config, task_presenter, long_description, tutorial):
     """Update project templates and information."""
     try:
         # Get project
-        project = find_app_by_short_name(config.project['short_name'])
+        project = find_app_by_short_name(config.project['short_name'],
+                                         config.pbclient)
         # Update attributes
         project.name = config.project['name']
         project.short_name = config.project['short_name']
@@ -97,16 +115,17 @@ def update_project(config, task_presenter, long_description, tutorial):
 
 @cli.command()
 @click.option('--tasks-file', help='File with tasks',
-               default='project.tasks', type=click.File('r'))
+              default='project.tasks', type=click.File('r'))
 @click.option('--tasks-type', help='Tasks type: JSON|CSV',
-               default='json', type=click.Choice(['json', 'csv']))
+              default='json', type=click.Choice(['json', 'csv']))
 @click.option('--priority', help="Priority for the tasks.", default=0)
 @click.option('--redundancy', help="Redundancy for tasks.", default=30)
 @pass_config
 def add_tasks(config, tasks_file, tasks_type, priority, redundancy):
     """Add tasks to a project."""
     try:
-        project = find_app_by_short_name(config.project['short_name'])
+        project = find_app_by_short_name(config.project['short_name'],
+                                         config.pbclient)
         tasks = tasks_file.read()
         if tasks_type == 'json':
             data = json.loads(tasks)
@@ -117,11 +136,17 @@ def add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                            info=task_info,
                                                            n_answers=redundancy,
                                                            priority_0=priority)
-        #else:
-        #    data = StringIO.StringIO(tasks)
-        #    reader = csv.reader(data, delimiter=',')
-        #    for row in reader:
-        #        task_info = dict(
+        elif tasks_type == 'csv':
+            data = StringIO.StringIO(tasks)
+            reader = csv.DictReader(data, delimiter=',')
+            for line in reader:
+                if line.get('info'):
+                    try:
+                        print format_json_task(line['info'])
+                    except:
+                        print line['info']
+        else:
+            click.echo("Unknown format for the tasks file. Use json or csv.")
 
     except exceptions.ConnectionError:
         click.echo("Connection Error! The server %s is not responding" % config.server)
@@ -136,7 +161,8 @@ def add_tasks(config, tasks_file, tasks_type, priority, redundancy):
 def delete_tasks(config, task_id):
     """Add tasks to a project."""
     try:
-        project = find_app_by_short_name(config.project['short_name'])
+        project = find_app_by_short_name(config.project['short_name'],
+                                         config.pbclient)
         if task_id:
             response = config.pbclient.delete_task(task_id)
             check_api_error(response)
@@ -154,30 +180,3 @@ def delete_tasks(config, task_id):
         click.echo("Connection Error! The server %s is not responding" % config.server)
     except:
         format_error("pbclient.delete_task", response)
-
-
-def find_app_by_short_name(short_name):
-    try:
-        response = pbclient.find_app(short_name=short_name)
-        check_api_error(response)
-        return response[0]
-    except exceptions.ConnectionError:
-        raise
-    except:
-        format_error("pbclient.find_app", response)
-
-
-def check_api_error(api_response):
-    """Check if returned API response contains an error"""
-    if type(api_response) == dict and (api_response.get('status') == 'failed'):
-        raise exceptions.HTTPError
-
-def format_error(module, error):
-    """Format the error for the given module"""
-    logging.error(module)
-    # Beautify JSON error
-    if type(error) == list:
-        print "Application not found"
-    else:
-        print json.dumps(error, sort_keys=True, indent=4, separators=(',', ': '))
-    exit(1)
