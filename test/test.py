@@ -1,5 +1,6 @@
 """Test module for pbs client."""
 import pbclient
+import json
 from helpers import *
 from mock import patch
 from nose.tools import assert_raises
@@ -60,3 +61,17 @@ class Test(object):
         mock.return_value = ['project']
         assert_raises(SystemExit, format_error, 'pbclient.find_app', ['error'])
         assert_raises(SystemExit, format_error, 'pbclient.find_app', self.error)
+
+    def test_format_json_task(self):
+        """Test format_json_task works."""
+        tmp = {'key': 'value'}
+        res = format_json_task(json.dumps(tmp))
+        err_msg = "It should return a JSON object"
+        assert type(res) == dict, err_msg
+        assert res['key'] == tmp['key'], err_msg
+
+        tmp = "key: value"
+        res = format_json_task(tmp)
+        err_msg = "It should return a string"
+        assert type(res) == str, err_msg
+        assert res == tmp, err_msg
