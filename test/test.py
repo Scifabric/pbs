@@ -52,3 +52,10 @@ class Test(object):
         check_api_error(error)
         error = 'not_a_dict'
         check_api_error(error)
+
+    @patch('pbclient.find_app')
+    def test_format_error(self, mock):
+        """Test format_error works."""
+        mock.return_value = ['project']
+        assert_raises(SystemExit, format_error, 'pbclient.find_app', ['error'])
+        assert_raises(SystemExit, format_error, 'pbclient.find_app', self.error)
