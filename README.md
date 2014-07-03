@@ -103,3 +103,52 @@ options, please check the **--help** command:
     pbs add_tasks --help
 ```
 
+## Updating project templates
+
+Now that you have added tasks, you can work in your templates. All you have to
+do to add/update the templates to your project is running the following
+command:
+
+```bash
+    pbs update_project
+```
+
+That command needs to have in the same folder where you are running it, the
+following files:
+
+ * template.html
+ * long_description.md
+ * tutorial.html
+
+If you want to use another template, you can via arguments:
+
+```bash
+    pbs update_project --template /tmp/template.html
+```
+
+If you want to see all the available
+options, please check the **--help** command:
+
+```bash
+    pbs update_project --help
+```
+
+## Deleting tasks from a project
+
+If you need it, you can delete all the tasks from your project, or only one
+using its task.id. For deleting all the tasks, all you've to do is run the
+following command:
+
+```pbs
+    pbs delete_tasks
+```
+
+This command will confirm that you want to delete all the tasks and associated
+task_runs. 
+
+If you want to see all the available
+options, please check the **--help** command:
+
+```bash
+    pbs delete_tasks --help
+```
