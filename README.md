@@ -54,6 +54,33 @@ in the other server all you have to do is the following:
 
 That command will use the values of the crowdcrafting section.
 
+## Creating a project
 
+Creating a project is very simple. All you have to do is create a file named
+**project.json** with the following fields:
+
+```json
+{
+    "name": "Flickr Person Finder",
+    "short_name": "flickrperson",
+    "description": "Image pattern recognition",
+    "question": "Do you see a real human face in this photo?"
+}
+``` 
+
+If you use the name **project.json** you will not have to pass the file name
+via an argument, as it's the named used by default. Once you have the file
+created, run the following command:
+
+```bash
+    pbs create_project
+```
+
+That command should create the project. If you want to see all the available
+options, please check the **--help** command:
+
+```bash
+    pbs create_project --help
+```
 
 
