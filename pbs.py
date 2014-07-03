@@ -114,37 +114,8 @@ def update_project(config, task_presenter, long_description, tutorial): # pragma
 @pass_config
 def add_tasks(config, tasks_file, tasks_type, priority, redundancy):
     """Add tasks to a project."""
-    try:
-        project = find_app_by_short_name(config.project['short_name'],
-                                         config.pbclient)
-        tasks = tasks_file.read()
-        if tasks_type == 'json':
-            data = json.loads(tasks)
-            for d in data:
-                if d.get('info'):
-                    task_info = d['info']
-                    response = config.pbclient.create_task(app_id=project.id,
-                                                           info=task_info,
-                                                           n_answers=redundancy,
-                                                           priority_0=priority)
-        elif tasks_type == 'csv':
-            data = StringIO.StringIO(tasks)
-            reader = csv.DictReader(data, delimiter=',')
-            for line in reader:
-                if line.get('info'):
-                    try:
-                        print format_json_task(line['info'])
-                    except:
-                        print line['info']
-        else:
-            click.echo("Unknown format for the tasks file. Use json or csv.")
-
-    except exceptions.ConnectionError:
-        click.echo("Connection Error! The server %s is not responding" % config.server)
-    except:
-        raise
-        format_error("pbclient.create_task", response)
-
+    res = _add_tasks(config, tasks_file, tasks_type, priority, redundancy)
+    click.echo(res)
 
 @cli.command()
 @click.option('--task-id', help='Task ID to delete from project', default=None)

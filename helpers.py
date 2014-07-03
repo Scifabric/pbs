@@ -24,13 +24,15 @@ This module exports the following methods:
     * format_error: format error message.
     * format_json_task: format a CSV row into JSON.
 """
+import csv
 import json
 import logging
+import StringIO
 from requests import exceptions
 
 __all__ = ['find_app_by_short_name', 'check_api_error',
            'format_error', 'format_json_task', '_create_project',
-           '_update_project']
+           '_update_project', '_add_tasks']
 
 def _create_project(config):
     """Create a project in a PyBossa server."""
@@ -68,6 +70,40 @@ def _update_project(config, task_presenter, long_description, tutorial):
         return ("Connection Error! The server %s is not responding" % config.server)
     except:
         return format_error("pbclient.update_app", response)
+
+
+def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
+    """Add tasks to a project."""
+    try:
+        project = find_app_by_short_name(config.project['short_name'],
+                                         config.pbclient)
+        tasks = tasks_file.read()
+        if tasks_type == 'json':
+            data = json.loads(tasks)
+            for d in data:
+                if d.get('info'):
+                    task_info = d['info']
+                    response = config.pbclient.create_task(app_id=project.id,
+                                                           info=task_info,
+                                                           n_answers=redundancy,
+                                                           priority_0=priority)
+        elif tasks_type == 'csv':
+            data = StringIO.StringIO(tasks)
+            reader = csv.DictReader(data, delimiter=',')
+            for line in reader:
+                if line.get('info'):
+                    try:
+                        print format_json_task(line['info'])
+                    except:
+                        print line['info']
+        else:
+            return ("Unknown format for the tasks file. Use json or csv.")
+
+    except exceptions.ConnectionError:
+        return ("Connection Error! The server %s is not responding" % config.server)
+    except:
+        return format_error("pbclient.create_task", response)
+
 
 
 def find_app_by_short_name(short_name, pbclient):
