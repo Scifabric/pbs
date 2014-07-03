@@ -98,7 +98,7 @@ def create_project(config): # pragma: no cover
 @click.option('--tutorial', help='The project tutorial file',
               type=click.File('r'), default='tutorial.html')
 @pass_config
-def update_project(config, task_presenter, long_description, tutorial):
+def update_project(config, task_presenter, long_description, tutorial): # pragma: no cover
     """Update project templates and information."""
     res = _update_project(config, task_presenter, long_description, tutorial)
     click.echo(res)
