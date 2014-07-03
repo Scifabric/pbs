@@ -29,7 +29,8 @@ import logging
 from requests import exceptions
 
 __all__ = ['find_app_by_short_name', 'check_api_error',
-           'format_error', 'format_json_task', '_create_project']
+           'format_error', 'format_json_task', '_create_project',
+           '_update_project']
 
 def _create_project(config):
     """Create a project in a PyBossa server."""
@@ -43,6 +44,30 @@ def _create_project(config):
         return("Connection Error! The server %s is not responding" % config.server)
     except:
         return format_error("pbclient.create_app", response)
+
+
+def _update_project(config, task_presenter, long_description, tutorial):
+    """Update a project."""
+    try:
+        # Get project
+        project = find_app_by_short_name(config.project['short_name'],
+                                         config.pbclient)
+        # Update attributes
+        project.name = config.project['name']
+        project.short_name = config.project['short_name']
+        project.description = config.project['description']
+        project.long_description = long_description.read()
+        # Update task presenter
+        project.info['task_presenter'] = task_presenter.read()
+        # Update tutorial
+        project.info['tutorial'] = tutorial.read()
+        response = config.pbclient.update_app(project)
+        check_api_error(response)
+        return ("Project %s updated!" % config.project['short_name'])
+    except exceptions.ConnectionError:
+        return ("Connection Error! The server %s is not responding" % config.server)
+    except:
+        return format_error("pbclient.update_app", response)
 
 
 def find_app_by_short_name(short_name, pbclient):

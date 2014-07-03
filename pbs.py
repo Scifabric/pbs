@@ -84,7 +84,7 @@ def cli(config, verbose, server, api_key, credentials, project):
 
 @cli.command()
 @pass_config
-def create_project(config):
+def create_project(config): # pragma: no cover
     """Create the PyBossa project."""
     res = _create_project(config)
     click.echo(res)
@@ -100,26 +100,8 @@ def create_project(config):
 @pass_config
 def update_project(config, task_presenter, long_description, tutorial):
     """Update project templates and information."""
-    try:
-        # Get project
-        project = find_app_by_short_name(config.project['short_name'],
-                                         config.pbclient)
-        # Update attributes
-        project.name = config.project['name']
-        project.short_name = config.project['short_name']
-        project.description = config.project['description']
-        project.long_description = long_description.read()
-        # Update task presenter
-        project.info['task_presenter'] = task_presenter.read()
-        # Update tutorial
-        project.info['tutorial'] = tutorial.read()
-        response = config.pbclient.update_app(project)
-        check_api_error(response)
-    except exceptions.ConnectionError:
-        click.echo("Connection Error! The server %s is not responding" % config.server)
-    except:
-        raise
-        format_error("pbclient.update_app", response)
+    res = _update_project(config, task_presenter, long_description, tutorial)
+    click.echo(res)
 
 
 @cli.command()
