@@ -101,3 +101,19 @@ class TestHelpers(TestDefault):
         pbclient.get_tasks.return_value = [task]
         self.config.pbclient = pbclient
         assert_raises(SystemExit, _delete_tasks, self.config, None)
+
+    @patch('helpers.find_app_by_short_name')
+    def test_delete_another_error_one_tasks(self, find_mock):
+        """Test delete tasks another error works for one task."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
+
+        find_mock.return_value = project
+
+        pbclient = MagicMock()
+        pbclient.delete_task.return_value = self.error
+        self.config.pbclient = pbclient
+        assert_raises(SystemExit, _delete_tasks, self.config, 1)
