@@ -32,7 +32,8 @@ from requests import exceptions
 
 __all__ = ['find_app_by_short_name', 'check_api_error',
            'format_error', 'format_json_task', '_create_project',
-           '_update_project', '_add_tasks', 'create_task_info']
+           '_update_project', '_add_tasks', 'create_task_info',
+           '_delete_tasks']
 
 def _create_project(config):
     """Create a project in a PyBossa server."""
@@ -113,6 +114,32 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         return format_error("pbclient.create_task", response)
 
 
+def _delete_tasks(config, task_id):
+    """Delete tasks from a project."""
+    try:
+        project = find_app_by_short_name(config.project['short_name'],
+                                         config.pbclient)
+        if task_id:
+            response = config.pbclient.delete_task(task_id)
+            check_api_error(response)
+            return "Task.id = %s and its associated task_runs have been deleted" % task_id
+        else:
+            limit = 100
+            offset = 0
+            tasks = config.pbclient.get_tasks(project.id, limit, offset)
+            while len(tasks) > 0:
+                for t in tasks:
+                    config.pbclient.delete_task(t.id)
+                offset += limit
+                tasks = config.pbclient.get_tasks(project.id, limit, offset)
+
+            return "All tasks and task_runs have been deleted"
+    except exceptions.ConnectionError:
+        click.echo("Connection Error! The server %s is not responding" % config.server)
+    except:
+        raise
+        format_error("pbclient.delete_task", response)
+
 def find_app_by_short_name(short_name, pbclient):
     """Return project by short_name."""
     try:
@@ -127,7 +154,6 @@ def find_app_by_short_name(short_name, pbclient):
 
 def check_api_error(api_response):
     """Check if returned API response contains an error."""
-    print api_response
     if type(api_response) == dict and (api_response.get('status') == 'failed'):
         raise exceptions.HTTPError
 
