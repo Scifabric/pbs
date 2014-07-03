@@ -108,7 +108,6 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
     except:
-        raise
         return format_error("pbclient.create_task", response)
 
 
