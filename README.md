@@ -1,4 +1,4 @@
-[![Travis CI](https://travis-ci.org/PyBossa/pbs.png?branch=master)](https://travis-ci.org/#!/PyBossa/pbs)  [![Coverage Status](https://coveralls.io/repos/PyBossa/pbs/badge.png)](https://coveralls.io/r/PyBossa/pbs?branch=master)
+[![Travis CI](https://travis-ci.org/PyBossa/pbs.png?branch=master)](https://travis-ci.org/#!/PyBossa/pbs)  [![Coverage Status](https://img.shields.io/coveralls/PyBossa/pbs.svg)](https://coveralls.io/r/PyBossa/pbs?branch=master)
 
 
 PBS - a PyBossa command line interface
