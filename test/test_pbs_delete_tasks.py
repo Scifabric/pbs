@@ -42,7 +42,6 @@ class TestHelpers(TestDefault):
 
         task = MagicMock()
         task.id = 1
-        tasks = [[task], []]
 
         pbclient = MagicMock()
         pbclient.get_tasks.side_effect = [[task], []]
