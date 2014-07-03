@@ -133,7 +133,6 @@ def _delete_tasks(config, task_id, limit=100, offset=0):
                     check_api_error(response)
                 offset += limit
                 tasks = config.pbclient.get_tasks(project.id, limit, offset)
-
             return "All tasks and task_runs have been deleted"
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)

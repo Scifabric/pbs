@@ -40,10 +40,15 @@ class TestHelpers(TestDefault):
 
         find_mock.return_value = project
 
+        task = MagicMock()
+        task.id = 1
+        tasks = [[task], []]
+
         pbclient = MagicMock()
-        pbclient.delete_task.return_value = []
+        pbclient.get_tasks.side_effect = [[task], []]
         self.config.pbclient = pbclient
-        res = _delete_tasks(self.config, None)
+
+        res = _delete_tasks(self.config, None, limit=1, offset=0)
         assert res == "All tasks and task_runs have been deleted", res
 
     @patch('helpers.find_app_by_short_name')
