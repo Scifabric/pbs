@@ -114,7 +114,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         return format_error("pbclient.create_task", response)
 
 
-def _delete_tasks(config, task_id):
+def _delete_tasks(config, task_id, limit=100, offset=0):
     """Delete tasks from a project."""
     try:
         project = find_app_by_short_name(config.project['short_name'],
@@ -124,8 +124,8 @@ def _delete_tasks(config, task_id):
             check_api_error(response)
             return "Task.id = %s and its associated task_runs have been deleted" % task_id
         else:
-            limit = 100
-            offset = 0
+            limit = limit
+            offset = offset
             tasks = config.pbclient.get_tasks(project.id, limit, offset)
             while len(tasks) > 0:
                 for t in tasks:
