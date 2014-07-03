@@ -86,6 +86,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                        info=task_info,
                                                        n_answers=redundancy,
                                                        priority_0=priority)
+                check_api_error(response)
             return ("%s tasks added to project: %s" % (len(data),
                                                       config.project['short_name']))
         elif tasks_type == 'csv':
@@ -98,6 +99,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                        info=task_info,
                                                        n_answers=redundancy,
                                                        priority_0=priority)
+                check_api_error(response)
                 n_tasks +=1
             return ("%s tasks added to project: %s" % (n_tasks,
                                                        config.project['short_name']))
@@ -126,6 +128,7 @@ def find_app_by_short_name(short_name, pbclient):
 
 def check_api_error(api_response):
     """Check if returned API response contains an error."""
+    print api_response
     if type(api_response) == dict and (api_response.get('status') == 'failed'):
         raise exceptions.HTTPError
 
