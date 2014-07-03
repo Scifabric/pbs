@@ -129,16 +129,16 @@ def _delete_tasks(config, task_id):
             tasks = config.pbclient.get_tasks(project.id, limit, offset)
             while len(tasks) > 0:
                 for t in tasks:
-                    config.pbclient.delete_task(t.id)
+                    response = config.pbclient.delete_task(t.id)
+                    check_api_error(response)
                 offset += limit
                 tasks = config.pbclient.get_tasks(project.id, limit, offset)
 
             return "All tasks and task_runs have been deleted"
     except exceptions.ConnectionError:
-        click.echo("Connection Error! The server %s is not responding" % config.server)
+        return ("Connection Error! The server %s is not responding" % config.server)
     except:
-        raise
-        format_error("pbclient.delete_task", response)
+        return format_error("pbclient.delete_task", response)
 
 def find_app_by_short_name(short_name, pbclient):
     """Return project by short_name."""
