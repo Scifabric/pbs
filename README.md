@@ -83,4 +83,23 @@ options, please check the **--help** command:
     pbs create_project --help
 ```
 
+## Adding tasks to a project
+
+Adding tasks is very simple. You can have your tasks in two formats:
+
+ * JSON
+ * CSV
+
+Therefore, adding tasks to your project is as simple as this command:
+
+```bash
+    pbs add_tasks --tasks-file tasks_file.json --tasks-type=json
+```
+
+If you want to see all the available
+options, please check the **--help** command:
+
+```bash
+    pbs add_tasks --help
+```
 
