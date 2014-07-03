@@ -32,7 +32,7 @@ from requests import exceptions
 
 __all__ = ['find_app_by_short_name', 'check_api_error',
            'format_error', 'format_json_task', '_create_project',
-           '_update_project', '_add_tasks']
+           '_update_project', '_add_tasks', 'create_task_info']
 
 def _create_project(config):
     """Create a project in a PyBossa server."""
@@ -81,23 +81,27 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         if tasks_type == 'json':
             data = json.loads(tasks)
             for d in data:
-                if d.get('info'):
-                    task_info = d['info']
-                    response = config.pbclient.create_task(app_id=project.id,
-                                                           info=task_info,
-                                                           n_answers=redundancy,
-                                                           priority_0=priority)
+                task_info = create_task_info(d)
+                response = config.pbclient.create_task(app_id=project.id,
+                                                       info=task_info,
+                                                       n_answers=redundancy,
+                                                       priority_0=priority)
             return ("%s tasks added to project: %s" % (len(data),
                                                       config.project['short_name']))
         elif tasks_type == 'csv':
             data = StringIO.StringIO(tasks)
             reader = csv.DictReader(data, delimiter=',')
+            n_tasks = 0
             for line in reader:
-                if line.get('info'):
-                    try:
-                        print format_json_task(line['info'])
-                    except:
-                        print line['info']
+                task_info = create_task_info(line)
+                response = config.pbclient.create_task(app_id=project.id,
+                                                       info=task_info,
+                                                       n_answers=redundancy,
+                                                       priority_0=priority)
+                n_tasks +=1
+            return ("%s tasks added to project: %s" % (n_tasks,
+                                                       config.project['short_name']))
+
         else:
             return ("Unknown format for the tasks file. Use json or csv.")
 
@@ -135,6 +139,16 @@ def format_error(module, error):
     else:
         print json.dumps(error, sort_keys=True, indent=4, separators=(',', ': '))
     exit(1)
+
+
+def create_task_info(task):
+    """Create task_info field."""
+    task_info = None
+    if task.get('info'):
+        task_info = task['info']
+    else:
+        task_info = task
+    return task_info
 
 
 def format_json_task(task_info):
