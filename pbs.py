@@ -47,6 +47,7 @@ class Config(object):
         self.verbose = False
         self.server = None
         self.api_key = None
+        self.project = None
         self.pbclient = pbclient
         self.parser = ConfigParser.ConfigParser()
 
@@ -85,16 +86,8 @@ def cli(config, verbose, server, api_key, credentials, project):
 @pass_config
 def create_project(config):
     """Create the PyBossa project."""
-    try:
-        response = config.pbclient.create_app(config.project['name'],
-                                              config.project['short_name'],
-                                              config.project['description'])
-        check_api_error(response)
-        click.echo("Project: %s created!" % config.project['short_name'])
-    except exceptions.ConnectionError:
-        click.echo("Connection Error! The server %s is not responding" % config.server)
-    except:
-        format_error("pbclient.create_app", response)
+    res = _create_project(config)
+    click.echo(res)
 
 
 @cli.command()

@@ -2,7 +2,7 @@
 import pbclient
 import json
 from helpers import *
-from mock import patch
+from mock import patch, MagicMock
 from nose.tools import assert_raises
 from requests import exceptions
 
@@ -17,6 +17,18 @@ class TestHelpers(object):
              "status": "failed",
              "status_code": 404,
              "target": "/api/app"}
+
+    config = MagicMock()
+    config.server = 'http://server'
+    config.api_key = 'apikey'
+    config.pbclient = pbclient
+    config.project = {'name': 'name',
+                 'description': 'description',
+                 'short_name': 'short_name'}
+
+    def tearDown(self):
+        self.error['status'] = 'failed'
+
 
     @patch('pbclient.find_app')
     def test_find_app_by_short_name(self, mock):
@@ -75,3 +87,26 @@ class TestHelpers(object):
         err_msg = "It should return a string"
         assert type(res) == str, err_msg
         assert res == tmp, err_msg
+
+    def test_create_project_create(self):
+        """Test create_project works."""
+        pbclient = MagicMock()
+        pbclient.create_app.return_value = {'short_name': 'short_name'}
+        self.config.pbclient = pbclient
+        res = _create_project(self.config)
+        assert res == 'Project: short_name created!', res
+
+    def test_create_project_connection_error(self):
+        """Test create_project connection error works."""
+        pbclient = MagicMock()
+        pbclient.create_app.side_effect = exceptions.ConnectionError
+        self.config.pbclient = pbclient
+        res = _create_project(self.config)
+        assert res == "Connection Error! The server http://server is not responding", res
+
+    def test_create_project_another_error(self):
+        """Test create_project another error works."""
+        pbclient = MagicMock()
+        pbclient.create_app.return_value = self.error
+        self.config.pbclient = pbclient
+        assert_raises(SystemExit, _create_project, self.config)

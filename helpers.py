@@ -29,7 +29,20 @@ import logging
 from requests import exceptions
 
 __all__ = ['find_app_by_short_name', 'check_api_error',
-           'format_error', 'format_json_task']
+           'format_error', 'format_json_task', '_create_project']
+
+def _create_project(config):
+    """Create a project in a PyBossa server."""
+    try:
+        response = config.pbclient.create_app(config.project['name'],
+                                              config.project['short_name'],
+                                              config.project['description'])
+        check_api_error(response)
+        return ("Project: %s created!" % config.project['short_name'])
+    except exceptions.ConnectionError:
+        return("Connection Error! The server %s is not responding" % config.server)
+    except:
+        return format_error("pbclient.create_app", response)
 
 
 def find_app_by_short_name(short_name, pbclient):
