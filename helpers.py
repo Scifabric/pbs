@@ -87,6 +87,8 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                            info=task_info,
                                                            n_answers=redundancy,
                                                            priority_0=priority)
+            return ("%s tasks added to project: %s" % (len(data),
+                                                      config.project['short_name']))
         elif tasks_type == 'csv':
             data = StringIO.StringIO(tasks)
             reader = csv.DictReader(data, delimiter=',')
