@@ -152,28 +152,22 @@ class TestHelpers(TestDefault):
         assert res == "Connection Error! The server http://server is not responding", res
 
 
-    #@patch('helpers.find_app_by_short_name')
-    #def test_add_tasks_another_error(self, find_mock):
-    #    """Test add_tasks another error works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
+    @patch('helpers.find_app_by_short_name')
+    def test_add_tasks_another_error(self, find_mock):
+        """Test add_tasks another error works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
 
-    #    find_mock.return_value = project
+        find_mock.return_value = project
 
-    #    task_presenter = MagicMock()
-    #    task_presenter.read.return_value = "presenter"
+        tasks = MagicMock()
+        tasks.read.return_value = json.dumps([{'key': 'value'}])
 
-    #    tutorial = MagicMock()
-    #    tutorial.read.return_value = "tutorial"
-
-    #    long_description = MagicMock()
-    #    long_description.read.return_value = "long_description"
-
-    #    pbclient = MagicMock()
-    #    pbclient.update_app.return_value = self.error
-    #    self.config.pbclient = pbclient
-    #    assert_raises(SystemExit, _update_project, self.config,
-    #                  task_presenter, long_description, tutorial)
+        pbclient = MagicMock()
+        pbclient.create_task.return_value = self.error
+        self.config.pbclient = pbclient
+        assert_raises(SystemExit, _add_tasks, self.config,
+                      tasks, 'json', 0, 30)
