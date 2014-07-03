@@ -111,32 +111,46 @@ class TestHelpers(TestDefault):
         assert res == "Unknown format for the tasks file. Use json or csv.", res
 
 
-    #@patch('helpers.find_app_by_short_name')
-    #def test_add_tasks_connection_error(self, find_mock):
-    #    """Test add_tasks connection error works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
+    @patch('helpers.find_app_by_short_name')
+    def test_add_tasks_csv_connection_error(self, find_mock):
+        """Test add_tasks csv connection error works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
 
-    #    find_mock.return_value = project
+        find_mock.return_value = project
 
-    #    task_presenter = MagicMock()
-    #    task_presenter.read.return_value = "presenter"
+        tasks = MagicMock()
+        tasks.read.return_value = "key, value\n, 1, 2"
 
-    #    tutorial = MagicMock()
-    #    tutorial.read.return_value = "tutorial"
+        pbclient = MagicMock()
+        pbclient.create_task.side_effect = exceptions.ConnectionError
+        self.config.pbclient = pbclient
+        res = _add_tasks(self.config, tasks, 'csv', 0, 30)
+        assert res == "Connection Error! The server http://server is not responding", res
 
-    #    long_description = MagicMock()
-    #    long_description.read.return_value = "long_description"
+    @patch('helpers.find_app_by_short_name')
+    def test_add_tasks_json_connection_error(self, find_mock):
+        """Test add_tasks json connection error works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
 
-    #    pbclient = MagicMock()
-    #    pbclient.update_app.side_effect = exceptions.ConnectionError
-    #    self.config.pbclient = pbclient
-    #    res = _update_project(self.config, task_presenter,
-    #                          long_description, tutorial)
-    #    assert res == "Connection Error! The server http://server is not responding", res
+        find_mock.return_value = project
+
+        tasks = MagicMock()
+        tasks.read.return_value = json.dumps([{'key': 'value'}])
+
+        pbclient = MagicMock()
+        pbclient.create_task.side_effect = exceptions.ConnectionError
+        self.config.pbclient = pbclient
+        res = _add_tasks(self.config, tasks, 'json', 0, 30)
+        assert res == "Connection Error! The server http://server is not responding", res
+
 
     #@patch('helpers.find_app_by_short_name')
     #def test_add_tasks_another_error(self, find_mock):
