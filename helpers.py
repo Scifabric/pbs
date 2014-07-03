@@ -113,7 +113,6 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         return format_error("pbclient.create_task", response)
 
 
-
 def find_app_by_short_name(short_name, pbclient):
     """Return project by short_name."""
     try:
