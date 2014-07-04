@@ -11,7 +11,29 @@ update the project templates (tutorial, task_presenter, and descriptions).
 Installation
 ============
 
-TODO
+pbs is available in Pypi, so you can install the software with pip:
+
+```bash
+    pip install pybossa-pbs
+```
+
+If you have all the dependencies, the package will be installed and you will be
+able to use it from the command line. The command is: **pbs**.
+
+If you want to hack on the code, just install it but with the **--editable**
+flag after cloning the repository:
+
+```
+    git clone https://github.com/PyBossa/pbs.git
+    cd pbs
+    virtualenv env
+    source env/bin/activate
+    pip install --editable .
+```
+
+This will install the pbs package, and you'll be able to modify it, patch it,
+etc. If you improve it, please, let us know and share the code so we can
+integrate it back ;-)
 
 ## Configuring pbs
 
