@@ -98,7 +98,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         # Check if for the data we have to auto-throttle task creation
         sleep, msg = enable_auto_throttling(data)
         # If true, warn user
-        if sleep:
+        if sleep: # pragma: no cover
             click.secho(msg, fg='yellow')
         # Show progress bar
         with click.progressbar(data, label="Adding Tasks") as bar:
@@ -110,7 +110,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                        priority_0=priority)
                 check_api_error(response)
                 # If auto-throttling enabled, sleep for 3 seconds
-                if sleep:
+                if sleep: # pragma: no cover
                     time.sleep(3)
             return ("%s tasks added to project: %s" % (len(data),
                                                   config.project['short_name']))
