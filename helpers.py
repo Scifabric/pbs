@@ -26,6 +26,8 @@ This module exports the following methods:
 """
 import csv
 import json
+import time
+import click
 import logging
 import StringIO
 from requests import exceptions
@@ -79,35 +81,39 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         project = find_app_by_short_name(config.project['short_name'],
                                          config.pbclient)
         tasks = tasks_file.read()
+        # Data list to process
+        data = []
+        # JSON type
         if tasks_type == 'json':
             data = json.loads(tasks)
-            for d in data:
+        # CSV type
+        elif tasks_type == 'csv':
+            csv_data = StringIO.StringIO(tasks)
+            reader = csv.DictReader(csv_data, delimiter=',')
+            n_tasks = 0
+            for line in reader:
+                data.append(line)
+        else:
+            return ("Unknown format for the tasks file. Use json or csv.")
+        # Check if for the data we have to auto-throttle task creation
+        sleep, msg = enable_auto_throttling(data)
+        # If true, warn user
+        if sleep:
+            click.secho(msg, fg='yellow')
+        # Show progress bar
+        with click.progressbar(data, label="Adding Tasks") as bar:
+            for d in bar:
                 task_info = create_task_info(d)
                 response = config.pbclient.create_task(app_id=project.id,
                                                        info=task_info,
                                                        n_answers=redundancy,
                                                        priority_0=priority)
                 check_api_error(response)
+                # If auto-throttling enabled, sleep for 3 seconds
+                if sleep:
+                    time.sleep(3)
             return ("%s tasks added to project: %s" % (len(data),
-                                                      config.project['short_name']))
-        elif tasks_type == 'csv':
-            data = StringIO.StringIO(tasks)
-            reader = csv.DictReader(data, delimiter=',')
-            n_tasks = 0
-            for line in reader:
-                task_info = create_task_info(line)
-                response = config.pbclient.create_task(app_id=project.id,
-                                                       info=task_info,
-                                                       n_answers=redundancy,
-                                                       priority_0=priority)
-                check_api_error(response)
-                n_tasks +=1
-            return ("%s tasks added to project: %s" % (n_tasks,
-                                                       config.project['short_name']))
-
-        else:
-            return ("Unknown format for the tasks file. Use json or csv.")
-
+                                                  config.project['short_name']))
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
     except:
@@ -177,6 +183,15 @@ def create_task_info(task):
         task_info = task
     return task_info
 
+
+def enable_auto_throttling(data, limit=299):
+    """Return True if more than 300 tasks have to be created."""
+    msg = 'Warning: %s tasks to create.' \
+          ' Auto-throttling enabled!' % len(data)
+    if len(data) > limit:
+        return (True, msg)
+    else:
+        return False, None
 
 def format_json_task(task_info):
     """Format task_info into JSON if applicable."""
