@@ -35,7 +35,7 @@ from requests import exceptions
 __all__ = ['find_app_by_short_name', 'check_api_error',
            'format_error', 'format_json_task', '_create_project',
            '_update_project', '_add_tasks', 'create_task_info',
-           '_delete_tasks']
+           '_delete_tasks', 'enable_auto_throttling']
 
 def _create_project(config):
     """Create a project in a PyBossa server."""
