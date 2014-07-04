@@ -6,9 +6,13 @@ from setuptools import setup
 try:
     from pypandoc import convert
     read_md = lambda f: convert(f, 'rst')
+    long_description = read_md('README.md')
+except IOError:
+    print("warning: README.md not found")
+    long_description = ""
 except ImportError:
     print("warning: pypandoc module not found, could not convert Markdown to RST")
-    read_md = lambda f: open(f, 'r').read()
+    long_description = ""
 
 setup(
     name="pybossa-pbs",
@@ -16,7 +20,7 @@ setup(
     author="Daniel Lombraña González",
     author_email="info@pybossa.com",
     description="PyBossa command line client",
-    long_description=read_md('README.md'),
+    long_description=long_description,
     license="AGPLv3",
     url="https://github.com/PyBossa/pbs",
     classifiers = ['Development Status :: 4 - Beta',
@@ -25,7 +29,7 @@ setup(
                    'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
                    'Operating System :: OS Independent',
                    'Programming Language :: Python',],
-    py_modules=['pbs'],
+    py_modules=['pbs', 'helpers'],
     install_requires=['Click', 'pybossa-client', 'requests', 'nose', 'mock', 'coverage',
                       'rednose', 'pypandoc'],
     entry_points='''
