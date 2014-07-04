@@ -79,3 +79,12 @@ class TestHelpers(TestDefault):
         task = {'k': 'v'}
         res = create_task_info(task)
         assert res == task
+
+    def test_enable_auto_throttling(self):
+        """Test enable_auto_throttling works."""
+        sleep, msg = enable_auto_throttling(range(10), 9)
+        assert sleep is True, "Throttling should be enabled"
+        assert msg is not None, "Throttling should be enabled"
+        sleep, msg = enable_auto_throttling(range(10), 10)
+        assert sleep is False, "Throttling should not be enabled"
+        assert msg is None, "Throttling should not be enabled"
