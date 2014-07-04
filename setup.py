@@ -5,8 +5,7 @@ from setuptools import setup
 
 try:
     from pypandoc import convert
-    read_md = lambda f: convert(f, 'rst')
-    long_description = read_md('README.md')
+    long_description = convert('README.md', 'md', format='rst')
 except IOError:
     print("warning: README.md not found")
     long_description = ""
