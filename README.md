@@ -123,6 +123,11 @@ Therefore, adding tasks to your project is as simple as this command:
 If you want to see all the available
 options, please check the **--help** command:
 
+**NOTE**: By default PyBossa servers use a rate limit for avoiding abuse of the
+API. For this reason, you can only do usually 300 requests per every 15
+minutes. If you are going to add more than 300 tasks, pbs will detect it and
+warn you, auto-enabling the throttling for you to respect the limits.
+
 ```bash
     pbs add_tasks --help
 ```
