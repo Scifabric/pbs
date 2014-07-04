@@ -30,6 +30,7 @@ import click
 import pbclient
 import json
 import StringIO
+import pkg_resources
 import csv
 import ConfigParser
 import os.path
@@ -55,15 +56,17 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
 
 
 @click.group()
-@click.option('--verbose', is_flag=True)
+@click.option('--version', is_flag=True)
 @click.option('--server',  help='The PyBossa server')
 @click.option('--api-key', help='Your PyBossa API-KEY')
 @click.option('--credentials', help='Use your PyBossa credentials in .pybossa.cfg file',
               default="default")
 @click.option('--project', type=click.File('r'), default='project.json')
 @pass_config
-def cli(config, verbose, server, api_key, credentials, project):
+def cli(config, version, server, api_key, credentials, project):
     """Create the cli command line."""
+    if version: # pragma: no cover
+        click.echo(pkg_resources.get_distribution('pybossa-pbs').version
     # Check first for the pybossa.rc file to configure server and api-key
     home = expanduser("~")
     if os.path.isfile(os.path.join(home, '.pybossa.cfg')):
