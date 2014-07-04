@@ -79,7 +79,6 @@ def cli(config, verbose, server, api_key, credentials, project):
     config.pbclient = pbclient
     config.pbclient.set('endpoint', config.server)
     config.pbclient.set('api_key', config.api_key)
-    click.echo("Config done!")
 
 
 @cli.command()
