@@ -66,7 +66,7 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
 def cli(config, version, server, api_key, credentials, project):
     """Create the cli command line."""
     if version: # pragma: no cover
-        click.echo(pkg_resources.get_distribution('pybossa-pbs').version
+        click.echo(pkg_resources.get_distribution('pybossa-pbs').version)
     # Check first for the pybossa.rc file to configure server and api-key
     home = expanduser("~")
     if os.path.isfile(os.path.join(home, '.pybossa.cfg')):
