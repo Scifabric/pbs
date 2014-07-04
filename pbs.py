@@ -30,7 +30,6 @@ import click
 import pbclient
 import json
 import StringIO
-import pkg_resources
 import csv
 import ConfigParser
 import os.path
@@ -56,24 +55,20 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
 
 
 @click.group()
-@click.option('--version', is_flag=True)
 @click.option('--server',  help='The PyBossa server')
 @click.option('--api-key', help='Your PyBossa API-KEY')
 @click.option('--credentials', help='Use your PyBossa credentials in .pybossa.cfg file',
               default="default")
 @click.option('--project', type=click.File('r'), default='project.json')
 @pass_config
-def cli(config, version, server, api_key, credentials, project):
+def cli(config, server, api_key, credentials, project):
     """Create the cli command line."""
-    if version: # pragma: no cover
-        click.echo(pkg_resources.get_distribution('pybossa-pbs').version)
     # Check first for the pybossa.rc file to configure server and api-key
     home = expanduser("~")
     if os.path.isfile(os.path.join(home, '.pybossa.cfg')):
         config.parser.read(os.path.join(home, '.pybossa.cfg'))
         config.server = config.parser.get(credentials,'server')
         config.api_key = config.parser.get(credentials, 'apikey')
-    config.verbose = verbose
     if server:
         config.server = server
     if api_key:
@@ -82,6 +77,16 @@ def cli(config, version, server, api_key, credentials, project):
     config.pbclient = pbclient
     config.pbclient.set('endpoint', config.server)
     config.pbclient.set('api_key', config.api_key)
+
+@cli.command()
+@pass_config
+def version(config):
+    """Show pbs version."""
+    try:
+        import pkg_resources
+        click.echo(pkg_resources.get_distribution('pybossa-pbs').version)
+    except:
+        click.echo("pybossa-pbs package not found!")
 
 
 @cli.command()
