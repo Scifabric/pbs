@@ -28,7 +28,9 @@ This module is a pybossa-client that runs the following commands:
 
 import click
 import pbclient
-import json
+import simplejson as json
+from simplejson import JSONDecodeError
+import jsonschema
 import StringIO
 import csv
 import ConfigParser
@@ -73,10 +75,34 @@ def cli(config, server, api_key, credentials, project):
         config.server = server
     if api_key:
         config.api_key = api_key
-    config.project = json.loads(project.read())
+    try:
+        config.project = json.loads(project.read())
+    except JSONDecodeError as e:
+        click.secho("Error: invalid JSON format in project.json:", fg='red')
+        if e.msg == 'Expecting value':
+            e.msg += " (if string enclose it with double quotes)"
+        click.echo("%s\n%s: line %s column %s" % (e.doc, e.msg, e.lineno, e.colno))
+        raise click.Abort()
+    try:
+        project_schema = {
+            "type": "object",
+            "properties": {
+                "name": {"type": "string"},
+                "short_name": {"type": "string"},
+                "description": {"type": "string"}
+            }
+        }
+        jsonschema.validate(config.project, project_schema)
+    except jsonschema.exceptions.ValidationError as e:
+        click.secho("Error: invalid type in project.json", fg='red')
+        click.secho("'%s': %s" % (e.path[0], e.message), fg='yellow')
+        click.echo("'%s' must be a %s" % (e.path[0], e.validator_value))
+        raise click.Abort()
+
     config.pbclient = pbclient
     config.pbclient.set('endpoint', config.server)
     config.pbclient.set('api_key', config.api_key)
+
 
 @cli.command()
 @pass_config
