@@ -169,7 +169,7 @@ If you need it, you can delete all the tasks from your project, or only one
 using its task.id. For deleting all the tasks, all you've to do is run the
 following command:
 
-```pbs
+```bash
     pbs delete_tasks
 ```
 
@@ -182,3 +182,12 @@ options, please check the **--help** command:
 ```bash
     pbs delete_tasks --help
 ```
+
+# Documentation
+
+You have more documentation, with real examples at
+[http://docs.pybossa.com](http://docs.pybossa.com).
+
+Check the [tutorial](http://docs.pybossa.com/en/latest/user/tutorial.html) as
+it uses **pbs**, and also its [pbs](http://docs.pybossa.com/en/latest/user/pbs.html) section
+in the site.
