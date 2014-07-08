@@ -5,7 +5,7 @@ from setuptools import setup
 
 try:
     from pypandoc import convert
-    long_description = convert('README.md', 'md', format='rst')
+    long_description = convert('README.md', 'rst')
 except IOError:
     print("warning: README.md not found")
     long_description = ""
@@ -15,7 +15,7 @@ except ImportError:
 
 setup(
     name="pybossa-pbs",
-    version="1.3",
+    version="1.4",
     author="Daniel Lombraña González",
     author_email="info@pybossa.com",
     description="PyBossa command line client",
