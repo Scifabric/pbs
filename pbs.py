@@ -20,7 +20,7 @@ A very simple PyBossa command line client.
 
 This module is a pybossa-client that runs the following commands:
 
-    * create_project: to create a PyBossa proejct
+    * create_project: to create a PyBossa project
     * add_tasks: to add tasks to an existing project
     * delete_tasks: to delete all tasks and task_runs from an existing project
 
