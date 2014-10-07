@@ -108,7 +108,7 @@ class TestHelpers(TestDefault):
         pbclient.create_task.return_value = {'id': 1, 'info': {'key': 'value'}}
         self.config.pbclient = pbclient
         res = _add_tasks(self.config, tasks, 'doc', 0, 30)
-        assert res == "Unknown format for the tasks file. Use json or csv.", res
+        assert res == "Unknown format for the tasks file. Use json, csv or po.", res
 
 
     @patch('helpers.find_app_by_short_name')
@@ -171,3 +171,33 @@ class TestHelpers(TestDefault):
         self.config.pbclient = pbclient
         assert_raises(SystemExit, _add_tasks, self.config,
                       tasks, 'json', 0, 30)
+
+    @patch('polib.pofile')
+    @patch('helpers.find_app_by_short_name')
+    def test_add_tasks_po_with_info(self, find_mock, po_mock):
+        """Test add_tasks po with info field works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
+        find_mock.return_value = project
+
+        entry = MagicMock()
+        entry.msgid = 'English'
+        entry.msgtr = ''
+        po = MagicMock()
+        po.untranslated_entries.return_value = [entry]
+        po_mock.return_value = po
+
+
+        tasks = MagicMock()
+        tasks.read.return_value = json.dumps([{'info': {'msgid': 'English',
+                                                        'msgtr':''}}])
+
+        pbclient = MagicMock()
+        pbclient.create_task.return_value = {'id': 1, 'info': {'msgid': 'English',
+                                                               'msgtr': ''}}
+        self.config.pbclient = pbclient
+        res = _add_tasks(self.config, tasks, 'po', 0, 30)
+        assert res == '1 tasks added to project: short_name', res

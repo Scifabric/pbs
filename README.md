@@ -7,7 +7,7 @@ PBS - a PyBossa command line interface
 ======================================
 
 **pbs** is a very simple command line interface to a PyBossa server. It allows
-you to create projects, add tasks (from a CSV or JSON file) with a nice
+you to create projects, add tasks (from a CSV, JSON or a PO file) with a nice
 progress bar, delete them and update the project templates 
 (tutorial, task_presenter, and descriptions) all from the command line.
 
@@ -110,10 +110,11 @@ options, please check the **--help** command:
 
 ## Adding tasks to a project
 
-Adding tasks is very simple. You can have your tasks in two formats:
+Adding tasks is very simple. You can have your tasks in three formats:
 
  * JSON
  * CSV
+ * PO (any po file that you want to translate)
 
 Therefore, adding tasks to your project is as simple as this command:
 

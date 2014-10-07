@@ -30,6 +30,7 @@ import time
 import click
 import logging
 import StringIO
+import polib
 from requests import exceptions
 
 __all__ = ['find_app_by_short_name', 'check_api_error',
@@ -93,8 +94,12 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
             n_tasks = 0
             for line in reader:
                 data.append(line)
+        elif tasks_type == 'po':
+            po = polib.pofile(tasks)
+            for entry in po.untranslated_entries():
+                data.append(entry.__dict__)
         else:
-            return ("Unknown format for the tasks file. Use json or csv.")
+            return ("Unknown format for the tasks file. Use json, csv or po.")
         # Check if for the data we have to auto-throttle task creation
         sleep, msg = enable_auto_throttling(data)
         # If true, warn user
