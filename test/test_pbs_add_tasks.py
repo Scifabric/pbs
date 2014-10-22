@@ -201,3 +201,23 @@ class TestHelpers(TestDefault):
         self.config.pbclient = pbclient
         res = _add_tasks(self.config, tasks, 'po', 0, 30)
         assert res == '1 tasks added to project: short_name', res
+
+    @patch('helpers.find_app_by_short_name')
+    def test_add_tasks_properties_with_info(self, find_mock):
+        """Test add_tasks properties with info field works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
+        find_mock.return_value = project
+
+        tasks = MagicMock()
+        tasks.read.return_value = "foo_id= foo\n"
+
+        pbclient = MagicMock()
+        pbclient.create_task.return_value = {'id': 1, 'info': {'id': 'foo_id',
+                                                               'string': 'foo'}}
+        self.config.pbclient = pbclient
+        res = _add_tasks(self.config, tasks, 'properties', 0, 30)
+        assert res == '1 tasks added to project: short_name', res
