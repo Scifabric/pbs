@@ -94,10 +94,19 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
             n_tasks = 0
             for line in reader:
                 data.append(line)
+        # PO type
         elif tasks_type == 'po':
             po = polib.pofile(tasks)
             for entry in po.untranslated_entries():
                 data.append(entry.__dict__)
+        # PROPERTIES type (used in Java and Firefox extensions)
+        elif tasks_type == 'properties':
+            lines = tasks.split('\n')
+            for l in lines:
+                if l:
+                    id, string = l.split('=')
+                    tmp = dict(id=id, string=string)
+                    data.append(tmp)
         else:
             return ("Unknown format for the tasks file. Use json, csv or po.")
         # Check if for the data we have to auto-throttle task creation
@@ -122,6 +131,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
     except:
+        raise
         return format_error("pbclient.create_task", response)
 
 
