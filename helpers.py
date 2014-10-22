@@ -104,8 +104,8 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
             lines = tasks.split('\n')
             for l in lines:
                 if l:
-                    id, string = l.split('=')
-                    tmp = dict(id=id, string=string)
+                    var_id, string = l.split('=')
+                    tmp = dict(var_id=var_id, string=string)
                     data.append(tmp)
         else:
             return ("Unknown format for the tasks file. Use json, csv or po.")

@@ -216,7 +216,7 @@ class TestHelpers(TestDefault):
         tasks.read.return_value = "foo_id= foo\n"
 
         pbclient = MagicMock()
-        pbclient.create_task.return_value = {'id': 1, 'info': {'id': 'foo_id',
+        pbclient.create_task.return_value = {'id': 1, 'info': {'var_id': 'foo_id',
                                                                'string': ' foo'}}
         self.config.pbclient = pbclient
         res = _add_tasks(self.config, tasks, 'properties', 0, 30)
