@@ -217,7 +217,7 @@ class TestHelpers(TestDefault):
 
         pbclient = MagicMock()
         pbclient.create_task.return_value = {'id': 1, 'info': {'id': 'foo_id',
-                                                               'string': 'foo'}}
+                                                               'string': ' foo'}}
         self.config.pbclient = pbclient
         res = _add_tasks(self.config, tasks, 'properties', 0, 30)
         assert res == '1 tasks added to project: short_name', res
