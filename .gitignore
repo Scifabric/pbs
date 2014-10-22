@@ -3,3 +3,8 @@ env
 *.un~
 *.swp
 .ropeproject
+.coverage
+.noseids
+build/
+dist/
+pbs.egg-info/
