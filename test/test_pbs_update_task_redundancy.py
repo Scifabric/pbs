@@ -7,9 +7,9 @@ from pbsexceptions import *
 from requests import exceptions
 
 
-class TestHelpers(TestDefault):
+class TestPbsUpdateTaskRedundancy(TestDefault):
 
-    """Test class for pbs.helpers."""
+    """Test class for pbs update task redundancy commands."""
 
     def fake_return_tasks(self, project_id, limit, offset):
         """Fake return tasks method."""

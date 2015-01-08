@@ -7,9 +7,9 @@ from nose.tools import assert_raises
 from requests import exceptions
 from pbsexceptions import ProjectNotFound
 
-class TestHelpers(TestDefault):
+class TestPbsUpdateProject(TestDefault):
 
-    """Test class for pbs.helpers."""
+    """Test class for pbs update project commands."""
 
     @patch('helpers.find_app_by_short_name')
     def test_update_project_create(self, find_mock):

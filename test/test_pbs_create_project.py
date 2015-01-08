@@ -9,9 +9,9 @@ from requests import exceptions
 from pbsexceptions import ProjectNotFound
 
 
-class TestHelpers(TestDefault):
+class TestPbsCreateProject(TestDefault):
 
-    """Test class for pbs.helpers."""
+    """Test class for pbs create project commands."""
 
     def test_create_project_create(self):
         """Test create_project works."""

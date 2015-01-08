@@ -9,9 +9,9 @@ from requests import exceptions
 from pbsexceptions import *
 
 
-class TestHelpers(TestDefault):
+class TestPbsDeleteTask(TestDefault):
 
-    """Test class for pbs.helpers."""
+    """Test class for pbs delete task commands."""
 
     @patch('helpers.find_app_by_short_name')
     def test_delete_task(self, find_mock):
