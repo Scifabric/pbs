@@ -50,7 +50,7 @@ def _create_project(config):
         return ("Project: %s created!" % config.project['short_name'])
     except exceptions.ConnectionError:
         return("Connection Error! The server %s is not responding" % config.server)
-    except ProjectNotFound, TaskNotFound:
+    except (ProjectNotFound, TaskNotFound):
         raise
 
 
@@ -74,7 +74,7 @@ def _update_project(config, task_presenter, long_description, tutorial):
         return ("Project %s updated!" % config.project['short_name'])
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
-    except ProjectNotFound, TaskNotFound:
+    except (ProjectNotFound, TaskNotFound):
         raise
 
 
@@ -132,7 +132,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                   config.project['short_name']))
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
-    except ProjectNotFound, TaskNotFound:
+    except (ProjectNotFound, TaskNotFound):
         raise
 
 
@@ -158,7 +158,7 @@ def _delete_tasks(config, task_id, limit=100, offset=0):
             return "All tasks and task_runs have been deleted"
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
-    except ProjectNotFound, TaskNotFound:
+    except (ProjectNotFound, TaskNotFound):
         raise
 
 
@@ -200,7 +200,7 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
                 return "All tasks redundancy have been updated"
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
-    except ProjectNotFound, TaskNotFound:
+    except (ProjectNotFound, TaskNotFound):
         raise
 
 
