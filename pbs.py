@@ -102,8 +102,7 @@ def cli(config, server, api_key, credentials, project):
 
 
 @cli.command()
-@pass_config
-def version(config):
+def version():
     """Show pbs version."""
     try:
         import pkg_resources
