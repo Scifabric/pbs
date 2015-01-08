@@ -93,7 +93,6 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         elif tasks_type == 'csv':
             csv_data = StringIO.StringIO(tasks)
             reader = csv.DictReader(csv_data, delimiter=',')
-            n_tasks = 0
             for line in reader:
                 data.append(line)
         # PO type
