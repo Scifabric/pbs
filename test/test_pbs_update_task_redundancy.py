@@ -11,9 +11,18 @@ class TestHelpers(TestDefault):
 
     """Test class for pbs.helpers."""
 
+    def fake_return_tasks(self, project_id, limit, offset):
+        """Fake return tasks method."""
+        task = MagicMock()
+        task.id = 1
+        if offset == 0:
+            return [task]
+        else:
+            return []
+
     @patch('helpers.find_app_by_short_name')
-    def test_update_task_redundancy(self, find_mock):
-        """Test update task redundancy works."""
+    def test_update_task_redundancy_individually(self, find_mock):
+        """Test update task redundancy individually works."""
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -23,11 +32,30 @@ class TestHelpers(TestDefault):
         find_mock.return_value = project
 
         pbclient = MagicMock()
-        # pbclient.update_task.return_value = []
         self.config.pbclient = pbclient
         res = _update_tasks_redundancy(self.config, 1, 5)
         msg = "Task.id = 1 redundancy has been updated to 5"
         assert res == msg, res
+
+    @patch('helpers.find_app_by_short_name')
+    def test_update_task_redundancy_all_tasks(self, find_mock):
+        """Test update task redundancy all tasks works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
+
+        find_mock.return_value = project
+
+
+        pbclient = MagicMock()
+        pbclient.get_tasks = self.fake_return_tasks
+        self.config.pbclient = pbclient
+        res = _update_tasks_redundancy(self.config, None, 5)
+        msg = "All tasks redundancy have been updated"
+        assert res == msg, res
+
 
     @patch('helpers.find_app_by_short_name')
     def test_update_task_redundancy_fails(self, find_mock):
