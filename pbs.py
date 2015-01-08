@@ -31,13 +31,10 @@ import pbclient
 import simplejson as json
 from simplejson import JSONDecodeError
 import jsonschema
-import StringIO
-import csv
 import ConfigParser
 import os.path
 from os.path import expanduser
 from helpers import *
-from requests import exceptions
 
 
 class Config(object):
