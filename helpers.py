@@ -132,9 +132,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                   config.project['short_name']))
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
-    except ProjectNotFound:
-        raise
-    except TaskNotFound:
+    except:
         raise
 
 
@@ -202,9 +200,7 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
                 return "All tasks redundancy have been updated"
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
-    except TaskNotFound:
-        raise
-    except ProjectNotFound:
+    except:
         raise
 
 
@@ -237,11 +233,8 @@ def format_error(module, error):
     """Format the error for the given module."""
     logging.error(module)
     # Beautify JSON error
-    if type(error) is not list:
-        print error.message
-        print json.dumps(error.error, sort_keys=True, indent=4, separators=(',', ': '))
-    else:
-        print error
+    print error.message
+    print json.dumps(error.error, sort_keys=True, indent=4, separators=(',', ': '))
     exit(1)
 
 

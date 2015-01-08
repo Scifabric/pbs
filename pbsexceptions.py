@@ -8,7 +8,7 @@ class PbsException(Exception):
     pass
 
 
-class ProjectNotFound(Exception):
+class ProjectNotFound(PbsException):
 
     """ProjectNotFound exception."""
 
@@ -21,7 +21,7 @@ class ProjectNotFound(Exception):
         self.message = "PyBossa project not found."
 
 
-class TaskNotFound(Exception):
+class TaskNotFound(PbsException):
 
     """TaskNotFound exception."""
 
