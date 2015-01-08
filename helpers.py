@@ -212,7 +212,7 @@ def find_app_by_short_name(short_name, pbclient):
         return response[0]
     except exceptions.ConnectionError:
         raise
-    except ProjectNotFound:
+    except:
         raise
 
 
