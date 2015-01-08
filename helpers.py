@@ -117,8 +117,8 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         if sleep: # pragma: no cover
             click.secho(msg, fg='yellow')
         # Show progress bar
-        with click.progressbar(data, label="Adding Tasks") as bar:
-            for d in bar:
+        with click.progressbar(data, label="Adding Tasks") as pgbar:
+            for d in pgbar:
                 task_info = create_task_info(d)
                 response = config.pbclient.create_task(app_id=project.id,
                                                        info=task_info,
@@ -186,9 +186,9 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
             # If true, warn user
             if sleep: # pragma: no cover
                 click.secho(msg, fg='yellow')
-            with click.progressbar(tasks, label="Updating Tasks") as bar:
+            with click.progressbar(tasks, label="Updating Tasks") as pgbar:
                 while len(tasks) > 0:
-                    for t in bar:
+                    for t in pgbar:
                         t.n_answers = redundancy
                         response = config.pbclient.update_task(t)
                         check_api_error(response)
