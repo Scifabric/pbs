@@ -6,6 +6,7 @@ from helpers import *
 from mock import patch, MagicMock
 from nose.tools import assert_raises
 from requests import exceptions
+from pbsexceptions import *
 
 
 class TestHelpers(TestDefault):
@@ -34,12 +35,13 @@ class TestHelpers(TestDefault):
     def test_find_app_by_short_name_error(self, mock, mock2):
         """Test find_app_by_short_name error is printed."""
         mock.return_value = self.error
-        find_app_by_short_name('project', pbclient)
-        mock2.assert_called_with('pbclient.find_app', self.error)
+        assert_raises(ProjectNotFound, find_app_by_short_name, 'project',
+                      pbclient)
 
     def test_check_api_error_raises_exception(self):
         """Test check_api_error raises HTTPError exception."""
-        assert_raises(exceptions.HTTPError, check_api_error, self.error)
+        error = dict(status='failed', target='diff')
+        assert_raises(exceptions.HTTPError, check_api_error, error)
 
     def test_check_api_error_returns_none(self):
         """Test check_api_error returns none."""
@@ -52,9 +54,8 @@ class TestHelpers(TestDefault):
     @patch('pbclient.find_app')
     def test_format_error(self, mock):
         """Test format_error works."""
-        mock.return_value = ['project']
-        assert_raises(SystemExit, format_error, 'pbclient.find_app', ['error'])
-        assert_raises(SystemExit, format_error, 'pbclient.find_app', self.error)
+        e = ProjectNotFound(message="m", error=dict(error="error"))
+        assert_raises(SystemExit, format_error, 'pbclient.find_app', e)
 
     def test_format_json_task(self):
         """Test format_json_task works."""

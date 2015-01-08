@@ -19,7 +19,7 @@ class TestDefault(object):
                   "exception_msg": "(NotFound)",
                   "status": "failed",
                   "status_code": 404,
-                  "target": "/api/app"}
+                  "target": "/api/task"}
 
     config = MagicMock()
     config.server = 'http://server'

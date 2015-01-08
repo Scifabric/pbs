@@ -32,6 +32,7 @@ import logging
 import StringIO
 import polib
 from requests import exceptions
+from pbsexceptions import ProjectNotFound, TaskNotFound
 
 __all__ = ['find_app_by_short_name', 'check_api_error',
            'format_error', 'format_json_task', '_create_project',
@@ -50,7 +51,7 @@ def _create_project(config):
     except exceptions.ConnectionError:
         return("Connection Error! The server %s is not responding" % config.server)
     except:
-        return format_error("pbclient.create_app", response)
+        raise
 
 
 def _update_project(config, task_presenter, long_description, tutorial):
@@ -74,7 +75,7 @@ def _update_project(config, task_presenter, long_description, tutorial):
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
     except:
-        return format_error("pbclient.update_app", response)
+        raise
 
 
 def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
@@ -131,8 +132,10 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                   config.project['short_name']))
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
-    except:
-        return format_error("pbclient.create_task", response)
+    except ProjectNotFound:
+        raise
+    except TaskNotFound:
+        raise
 
 
 def _delete_tasks(config, task_id, limit=100, offset=0):
@@ -158,7 +161,7 @@ def _delete_tasks(config, task_id, limit=100, offset=0):
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
     except:
-        return format_error("pbclient.delete_task", response)
+        raise
 
 
 def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
@@ -199,8 +202,10 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
                 return "All tasks redundancy have been updated"
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
-    except:
-        return format_error("pbclient.update_task", response)
+    except TaskNotFound:
+        raise
+    except ProjectNotFound:
+        raise
 
 
 def find_app_by_short_name(short_name, pbclient):
@@ -211,24 +216,32 @@ def find_app_by_short_name(short_name, pbclient):
         return response[0]
     except exceptions.ConnectionError:
         raise
-    except:
-        format_error("pbclient.find_app", response)
+    except ProjectNotFound:
+        raise
 
 
 def check_api_error(api_response):
     """Check if returned API response contains an error."""
     if type(api_response) == dict and (api_response.get('status') == 'failed'):
-        raise exceptions.HTTPError
+        if 'app' in api_response.get('target'):
+            raise ProjectNotFound(message='PyBossa Project not found',
+                                  error=api_response)
+        if 'task' in api_response.get('target'):
+            raise TaskNotFound(message='PyBossa Task not found',
+                               error=api_response)
+        else:
+            raise exceptions.HTTPError
 
 
 def format_error(module, error):
     """Format the error for the given module."""
     logging.error(module)
     # Beautify JSON error
-    if type(error) == list:
-        print "Project not found"
+    if type(error) is not list:
+        print error.message
+        print json.dumps(error.error, sort_keys=True, indent=4, separators=(',', ': '))
     else:
-        print json.dumps(error, sort_keys=True, indent=4, separators=(',', ': '))
+        print error
     exit(1)
 
 

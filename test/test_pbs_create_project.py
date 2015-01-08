@@ -6,6 +6,7 @@ from default import TestDefault
 from mock import patch, MagicMock
 from nose.tools import assert_raises
 from requests import exceptions
+from pbsexceptions import ProjectNotFound
 
 
 class TestHelpers(TestDefault):
@@ -33,5 +34,4 @@ class TestHelpers(TestDefault):
         pbclient = MagicMock()
         pbclient.create_app.return_value = self.error
         self.config.pbclient = pbclient
-        assert_raises(SystemExit, _create_project, self.config)
-
+        assert_raises(ProjectNotFound, _create_project, self.config)

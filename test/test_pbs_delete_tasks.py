@@ -6,6 +6,7 @@ from default import TestDefault
 from mock import patch, MagicMock
 from nose.tools import assert_raises
 from requests import exceptions
+from pbsexceptions import *
 
 
 class TestHelpers(TestDefault):
@@ -104,7 +105,7 @@ class TestHelpers(TestDefault):
         task.id = 1
         pbclient.get_tasks.return_value = [task]
         self.config.pbclient = pbclient
-        assert_raises(SystemExit, _delete_tasks, self.config, None)
+        assert_raises(ProjectNotFound, _delete_tasks, self.config, None)
 
     @patch('helpers.find_app_by_short_name')
     def test_delete_another_error_one_tasks(self, find_mock):
@@ -118,6 +119,6 @@ class TestHelpers(TestDefault):
         find_mock.return_value = project
 
         pbclient = MagicMock()
-        pbclient.delete_task.return_value = self.error
+        pbclient.delete_task.return_value = self.error_task
         self.config.pbclient = pbclient
-        assert_raises(SystemExit, _delete_tasks, self.config, 1)
+        assert_raises(TaskNotFound, _delete_tasks, self.config, 1)
