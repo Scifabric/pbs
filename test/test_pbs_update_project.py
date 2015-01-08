@@ -5,10 +5,11 @@ from default import TestDefault
 from mock import patch, MagicMock
 from nose.tools import assert_raises
 from requests import exceptions
+from pbsexceptions import ProjectNotFound
 
-class TestHelpers(TestDefault):
+class TestPbsUpdateProject(TestDefault):
 
-    """Test class for pbs.helpers."""
+    """Test class for pbs update project commands."""
 
     @patch('helpers.find_app_by_short_name')
     def test_update_project_create(self, find_mock):
@@ -85,7 +86,8 @@ class TestHelpers(TestDefault):
         long_description.read.return_value = "long_description"
 
         pbclient = MagicMock()
+        print self.error
         pbclient.update_app.return_value = self.error
         self.config.pbclient = pbclient
-        assert_raises(SystemExit, _update_project, self.config,
+        assert_raises(ProjectNotFound, _update_project, self.config,
                       task_presenter, long_description, tutorial)

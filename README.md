@@ -1,5 +1,7 @@
-[![Travis CI](https://travis-ci.org/PyBossa/pbs.png?branch=master)](https://travis-ci.org/#!/PyBossa/pbs)  [![Coverage Status](https://img.shields.io/coveralls/PyBossa/pbs.svg)](https://coveralls.io/r/PyBossa/pbs?branch=master) [![Downloads](https://pypip.in/download/pybossa-pbs/badge.png)](https://pypi.python.org/pypi/pybossa-pbs/) 
-[![License](https://pypip.in/license/pybossa-pbs/badge.png)](https://pypi.python.org/pypi/pybossa-pbs/)
+[![Travis CI](https://travis-ci.org/PyBossa/pbs.png?branch=master)](https://travis-ci.org/#!/PyBossa/pbs)
+[![Code
+Health](https://landscape.io/github/PyBossa/pbs/master/landscape.svg)](https://landscape.io/github/PyBossa/pbs/master)
+[![Coverage Status](https://img.shields.io/coveralls/PyBossa/pbs.svg)](https://coveralls.io/r/PyBossa/pbs?branch=master) [![Downloads](https://pypip.in/download/pybossa-pbs/badge.png)](https://pypi.python.org/pypi/pybossa-pbs/) [![License](https://pypip.in/license/pybossa-pbs/badge.png)](https://pypi.python.org/pypi/pybossa-pbs/)
 
 
 
@@ -164,6 +166,34 @@ options, please check the **--help** command:
 ```bash
     pbs update_project --help
 ```
+
+## Updating tasks redundancy from a project
+
+If you need it, you can update the redundancy of a task using its ID or all the
+tasks skipping the ID. For example, to update the redundancy of one task to 5:
+
+```bash
+    pbs update-task-redundancy --task-id 34234 --redundancy 5
+```
+
+To update all of them:
+
+```bash
+    pbs update-task-redundancy --redundancy 5
+```
+
+**Note**: without the --redundancy argument it will revert the redundancy to
+the default value: 30.
+
+This last command will confirm that you want to update all the tasks.
+
+If you want to see all the available
+options, please check the **--help** command:
+
+```bash
+    pbs update-task-redundancy --help
+```
+
 
 ## Deleting tasks from a project
 

@@ -31,13 +31,10 @@ import pbclient
 import simplejson as json
 from simplejson import JSONDecodeError
 import jsonschema
-import StringIO
-import csv
 import ConfigParser
 import os.path
 from os.path import expanduser
 from helpers import *
-from requests import exceptions
 
 
 class Config(object):
@@ -105,13 +102,12 @@ def cli(config, server, api_key, credentials, project):
 
 
 @cli.command()
-@pass_config
-def version(config):
+def version():
     """Show pbs version."""
     try:
         import pkg_resources
         click.echo(pkg_resources.get_distribution('pybossa-pbs').version)
-    except:
+    except ImportError:
         click.echo("pybossa-pbs package not found!")
 
 
@@ -166,4 +162,22 @@ def delete_tasks(config, task_id):
             click.echo("Aborting.")
     else:
         res = _delete_tasks(config, task_id)
+        click.echo(res)
+
+@cli.command(name='update-task-redundancy')
+@click.option('--task-id', help='Task ID to update from project', default=None)
+@click.option('--redundancy', help='New redundancy for task', default=None)
+@pass_config
+def update_task_redundancy(config, task_id, redundancy):
+    """Update task redudancy for a project."""
+    if task_id is None:
+        msg = ("Are you sure you want to update all the tasks redundancy?")
+        if click.confirm(msg):
+            res = _update_tasks_redundancy(config, task_id, redundancy)
+            click.echo(res)
+
+        else:
+            click.echo("Aborting.")
+    else:
+        res = _update_tasks_redundancy(config, task_id, redundancy)
         click.echo(res)

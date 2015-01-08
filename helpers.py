@@ -29,14 +29,16 @@ import json
 import time
 import click
 import logging
-import StringIO
+from StringIO import StringIO
 import polib
 from requests import exceptions
+from pbsexceptions import ProjectNotFound, TaskNotFound
 
 __all__ = ['find_app_by_short_name', 'check_api_error',
            'format_error', 'format_json_task', '_create_project',
            '_update_project', '_add_tasks', 'create_task_info',
-           '_delete_tasks', 'enable_auto_throttling']
+           '_delete_tasks', 'enable_auto_throttling',
+           '_update_tasks_redundancy']
 
 def _create_project(config):
     """Create a project in a PyBossa server."""
@@ -48,8 +50,8 @@ def _create_project(config):
         return ("Project: %s created!" % config.project['short_name'])
     except exceptions.ConnectionError:
         return("Connection Error! The server %s is not responding" % config.server)
-    except:
-        return format_error("pbclient.create_app", response)
+    except (ProjectNotFound, TaskNotFound):
+        raise
 
 
 def _update_project(config, task_presenter, long_description, tutorial):
@@ -72,8 +74,8 @@ def _update_project(config, task_presenter, long_description, tutorial):
         return ("Project %s updated!" % config.project['short_name'])
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
-    except:
-        return format_error("pbclient.update_app", response)
+    except (ProjectNotFound, TaskNotFound):
+        raise
 
 
 def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
@@ -89,9 +91,8 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
             data = json.loads(tasks)
         # CSV type
         elif tasks_type == 'csv':
-            csv_data = StringIO.StringIO(tasks)
+            csv_data = StringIO(tasks)
             reader = csv.DictReader(csv_data, delimiter=',')
-            n_tasks = 0
             for line in reader:
                 data.append(line)
         # PO type
@@ -115,8 +116,8 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         if sleep: # pragma: no cover
             click.secho(msg, fg='yellow')
         # Show progress bar
-        with click.progressbar(data, label="Adding Tasks") as bar:
-            for d in bar:
+        with click.progressbar(data, label="Adding Tasks") as pgbar:
+            for d in pgbar:
                 task_info = create_task_info(d)
                 response = config.pbclient.create_task(app_id=project.id,
                                                        info=task_info,
@@ -130,8 +131,8 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                   config.project['short_name']))
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
-    except:
-        return format_error("pbclient.create_task", response)
+    except (ProjectNotFound, TaskNotFound):
+        raise
 
 
 def _delete_tasks(config, task_id, limit=100, offset=0):
@@ -156,8 +157,51 @@ def _delete_tasks(config, task_id, limit=100, offset=0):
             return "All tasks and task_runs have been deleted"
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
-    except:
-        return format_error("pbclient.delete_task", response)
+    except (ProjectNotFound, TaskNotFound):
+        raise
+
+
+def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
+    """Update tasks redundancy from a project."""
+    try:
+        project = find_app_by_short_name(config.project['short_name'],
+                                         config.pbclient)
+        if task_id:
+            response = config.pbclient.find_tasks(project.id, id=task_id)
+            check_api_error(response)
+            task = response[0]
+            task.n_answers = redundancy
+            response = config.pbclient.update_task(task)
+            check_api_error(response)
+            msg = "Task.id = %s redundancy has been updated to %s" % (task_id,
+                                                                      redundancy)
+            return msg
+        else:
+            limit = limit
+            offset = offset
+            tasks = config.pbclient.get_tasks(project.id, limit, offset)
+            # Check if for the data we have to auto-throttle task update
+            sleep, msg = enable_auto_throttling(tasks)
+            # If true, warn user
+            if sleep: # pragma: no cover
+                click.secho(msg, fg='yellow')
+            with click.progressbar(tasks, label="Updating Tasks") as pgbar:
+                while len(tasks) > 0:
+                    for t in pgbar:
+                        t.n_answers = redundancy
+                        response = config.pbclient.update_task(t)
+                        check_api_error(response)
+                        # If auto-throttling enabled, sleep for 3 seconds
+                        if sleep: # pragma: no cover
+                            time.sleep(3)
+                    offset += limit
+                    tasks = config.pbclient.get_tasks(project.id, limit, offset)
+                return "All tasks redundancy have been updated"
+    except exceptions.ConnectionError:
+        return ("Connection Error! The server %s is not responding" % config.server)
+    except (ProjectNotFound, TaskNotFound):
+        raise
+
 
 def find_app_by_short_name(short_name, pbclient):
     """Return project by short_name."""
@@ -167,24 +211,29 @@ def find_app_by_short_name(short_name, pbclient):
         return response[0]
     except exceptions.ConnectionError:
         raise
-    except:
-        format_error("pbclient.find_app", response)
+    except ProjectNotFound:
+        raise
 
 
 def check_api_error(api_response):
     """Check if returned API response contains an error."""
     if type(api_response) == dict and (api_response.get('status') == 'failed'):
-        raise exceptions.HTTPError
+        if 'app' in api_response.get('target'):
+            raise ProjectNotFound(message='PyBossa Project not found',
+                                  error=api_response)
+        if 'task' in api_response.get('target'):
+            raise TaskNotFound(message='PyBossa Task not found',
+                               error=api_response)
+        else:
+            raise exceptions.HTTPError
 
 
 def format_error(module, error):
     """Format the error for the given module."""
     logging.error(module)
     # Beautify JSON error
-    if type(error) == list:
-        print "Project not found"
-    else:
-        print json.dumps(error, sort_keys=True, indent=4, separators=(',', ': '))
+    print error.message
+    print json.dumps(error.error, sort_keys=True, indent=4, separators=(',', ': '))
     exit(1)
 
 

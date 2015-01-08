@@ -5,10 +5,11 @@ from default import TestDefault
 from mock import patch, MagicMock
 from nose.tools import assert_raises
 from requests import exceptions
+from pbsexceptions import *
 
-class TestHelpers(TestDefault):
+class TestPbsAddTask(TestDefault):
 
-    """Test class for pbs.helpers."""
+    """Test class for pbs add tasks commands."""
 
     @patch('helpers.find_app_by_short_name')
     def test_add_tasks_json_with_info(self, find_mock):
@@ -169,7 +170,7 @@ class TestHelpers(TestDefault):
         pbclient = MagicMock()
         pbclient.create_task.return_value = self.error
         self.config.pbclient = pbclient
-        assert_raises(SystemExit, _add_tasks, self.config,
+        assert_raises(ProjectNotFound, _add_tasks, self.config,
                       tasks, 'json', 0, 30)
 
     @patch('polib.pofile')
