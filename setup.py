@@ -28,7 +28,7 @@ setup(
                    'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
                    'Operating System :: OS Independent',
                    'Programming Language :: Python',],
-    py_modules=['pbs', 'helpers'],
+    py_modules=['pbs', 'helpers', 'pbsexceptions'],
     install_requires=['Click', 'pybossa-client', 'requests', 'nose', 'mock', 'coverage',
                       'rednose', 'pypandoc', 'simplejson', 'jsonschema', 'polib'],
     entry_points='''
