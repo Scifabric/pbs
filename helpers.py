@@ -29,7 +29,7 @@ import json
 import time
 import click
 import logging
-import StringIO
+from StringIO import StringIO
 import polib
 from requests import exceptions
 from pbsexceptions import ProjectNotFound, TaskNotFound
@@ -91,7 +91,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
             data = json.loads(tasks)
         # CSV type
         elif tasks_type == 'csv':
-            csv_data = StringIO.StringIO(tasks)
+            csv_data = StringIO(tasks)
             reader = csv.DictReader(csv_data, delimiter=',')
             for line in reader:
                 data.append(line)
