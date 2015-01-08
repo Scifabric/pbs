@@ -36,7 +36,8 @@ from requests import exceptions
 __all__ = ['find_app_by_short_name', 'check_api_error',
            'format_error', 'format_json_task', '_create_project',
            '_update_project', '_add_tasks', 'create_task_info',
-           '_delete_tasks', 'enable_auto_throttling']
+           '_delete_tasks', 'enable_auto_throttling',
+           '_update_tasks_redundancy']
 
 def _create_project(config):
     """Create a project in a PyBossa server."""
@@ -158,6 +159,49 @@ def _delete_tasks(config, task_id, limit=100, offset=0):
         return ("Connection Error! The server %s is not responding" % config.server)
     except:
         return format_error("pbclient.delete_task", response)
+
+
+def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
+    """Update tasks redundancy from a project."""
+    try:
+        project = find_app_by_short_name(config.project['short_name'],
+                                         config.pbclient)
+        if task_id:
+            response = config.pbclient.find_tasks(project.id, id=task_id)
+            check_api_error(response)
+            task = response[0]
+            task.n_answers = redundancy
+            response = config.pbclient.update_task(task)
+            check_api_error(response)
+            msg = "Task.id = %s redundancy has been updated to %s" % (task_id,
+                                                                      redundancy)
+            return msg
+        else:
+            limit = limit
+            offset = offset
+            tasks = config.pbclient.get_tasks(project.id, limit, offset)
+            # Check if for the data we have to auto-throttle task update
+            sleep, msg = enable_auto_throttling(tasks)
+            # If true, warn user
+            if sleep: # pragma: no cover
+                click.secho(msg, fg='yellow')
+            with click.progressbar(tasks, label="Updating Tasks") as bar:
+                while len(tasks) > 0:
+                    for t in bar:
+                        t.n_answers = redundancy
+                        response = config.pbclient.update_task(t)
+                        check_api_error(response)
+                        # If auto-throttling enabled, sleep for 3 seconds
+                        if sleep: # pragma: no cover
+                            time.sleep(3)
+                    offset += limit
+                    tasks = config.pbclient.get_tasks(project.id, limit, offset)
+                return "All tasks redundancy have been updated"
+    except exceptions.ConnectionError:
+        return ("Connection Error! The server %s is not responding" % config.server)
+    except:
+        return format_error("pbclient.update_task", response)
+
 
 def find_app_by_short_name(short_name, pbclient):
     """Return project by short_name."""
