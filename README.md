@@ -165,6 +165,34 @@ options, please check the **--help** command:
     pbs update_project --help
 ```
 
+## Updating tasks redundancy from a project
+
+If you need it, you can update the redundancy of a task using its ID or all the
+tasks skipping the ID. For example, to update the redundancy of one task to 5:
+
+```bash
+    pbs update-task-redundancy --task-id 34234 --redundancy 5
+```
+
+To update all of them:
+
+```bash
+    pbs update-task-redundancy --redundancy 5
+```
+
+**Note**: without the --redundancy argument it will revert the redundancy to
+the default value: 30.
+
+This last command will confirm that you want to update all the tasks.
+
+If you want to see all the available
+options, please check the **--help** command:
+
+```bash
+    pbs update-task-redundancy --help
+```
+
+
 ## Deleting tasks from a project
 
 If you need it, you can delete all the tasks from your project, or only one
