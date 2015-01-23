@@ -52,7 +52,7 @@ to configure it is creating a simple config file in your home folder:
 
 The file should have the following structure:
 
-```
+```ini
 [default]
 server: http://theserver.com
 apikey: yourkey
@@ -61,7 +61,7 @@ apikey: yourkey
 If you are working with more servers, add another section below it. For
 example:
 
-```
+```ini
 [default]
 server: http://theserver.com
 apikey: yourkey
