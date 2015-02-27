@@ -1,4 +1,3 @@
-import pbclient
 import json
 from helpers import *
 from default import TestDefault
