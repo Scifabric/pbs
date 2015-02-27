@@ -1,6 +1,5 @@
 """Test module for pbs client."""
 from mock import MagicMock
-import pbclient
 
 
 class TestDefault(object):
@@ -24,7 +23,6 @@ class TestDefault(object):
     config = MagicMock()
     config.server = 'http://server'
     config.api_key = 'apikey'
-    config.pbclient = pbclient
     config.project = {'name': 'name',
                       'description': 'description',
                       'short_name': 'short_name'}
