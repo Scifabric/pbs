@@ -111,7 +111,8 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                     tmp = dict(var_id=var_id, string=string)
                     data.append(tmp)
         else:
-            return ("Unknown format for the tasks file. Use json, csv or po.")
+            return ("Unknown format for the tasks file. Use json, csv, po or "
+                    "properties.")
         # Check if for the data we have to auto-throttle task creation
         sleep, msg = enable_auto_throttling(data)
         # If true, warn user
