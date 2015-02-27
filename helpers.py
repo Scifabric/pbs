@@ -84,6 +84,8 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         project = find_app_by_short_name(config.project['short_name'],
                                          config.pbclient)
         tasks = tasks_file.read()
+        if tasks_type is None:
+            tasks_type = tasks_file.name.split('.')[-1]
         # Data list to process
         data = []
         # JSON type
