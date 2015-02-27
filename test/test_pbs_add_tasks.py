@@ -72,7 +72,7 @@ class TestPbsAddTask(TestDefault):
 
     @patch('helpers.find_app_by_short_name')
     def test_add_tasks_csv_without_info(self, find_mock):
-        """Test add_tasks csv with info field works."""
+        """Test add_tasks csv without info field works."""
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
