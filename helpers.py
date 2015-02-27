@@ -40,6 +40,7 @@ __all__ = ['find_app_by_short_name', 'check_api_error',
            '_delete_tasks', 'enable_auto_throttling',
            '_update_tasks_redundancy']
 
+
 def _create_project(config):
     """Create a project in a PyBossa server."""
     try:
@@ -116,7 +117,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         # Check if for the data we have to auto-throttle task creation
         sleep, msg = enable_auto_throttling(data)
         # If true, warn user
-        if sleep: # pragma: no cover
+        if sleep:  # pragma: no cover
             click.secho(msg, fg='yellow')
         # Show progress bar
         with click.progressbar(data, label="Adding Tasks") as pgbar:
@@ -128,10 +129,10 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                        priority_0=priority)
                 check_api_error(response)
                 # If auto-throttling enabled, sleep for 3 seconds
-                if sleep: # pragma: no cover
+                if sleep:  # pragma: no cover
                     time.sleep(3)
             return ("%s tasks added to project: %s" % (len(data),
-                                                  config.project['short_name']))
+                    config.project['short_name']))
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
     except (ProjectNotFound, TaskNotFound):
@@ -186,7 +187,7 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
             # Check if for the data we have to auto-throttle task update
             sleep, msg = enable_auto_throttling(tasks)
             # If true, warn user
-            if sleep: # pragma: no cover
+            if sleep:  # pragma: no cover
                 click.secho(msg, fg='yellow')
             with click.progressbar(tasks, label="Updating Tasks") as pgbar:
                 while len(tasks) > 0:
@@ -195,7 +196,7 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
                         response = config.pbclient.update_task(t)
                         check_api_error(response)
                         # If auto-throttling enabled, sleep for 3 seconds
-                        if sleep: # pragma: no cover
+                        if sleep:  # pragma: no cover
                             time.sleep(3)
                     offset += limit
                     tasks = config.pbclient.get_tasks(project.id, limit, offset)
@@ -258,6 +259,7 @@ def enable_auto_throttling(data, limit=299):
         return (True, msg)
     else:
         return False, None
+
 
 def format_json_task(task_info):
     """Format task_info into JSON if applicable."""
