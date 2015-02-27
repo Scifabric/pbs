@@ -151,7 +151,8 @@ class TestPbsAddTask(TestDefault):
         pbclient.create_task.return_value = {'id': 1, 'info': {'key': 'value'}}
         self.config.pbclient = pbclient
         res = _add_tasks(self.config, tasks, None, 0, 30)
-        assert res == "Unknown format for the tasks file. Use json, csv or po.", res
+        assert res == ("Unknown format for the tasks file. Use json, csv, po or "
+                      "properties."), res
 
     @patch('helpers.find_app_by_short_name')
     def test_add_tasks_unknow_type(self, find_mock):
@@ -171,7 +172,8 @@ class TestPbsAddTask(TestDefault):
         pbclient.create_task.return_value = {'id': 1, 'info': {'key': 'value'}}
         self.config.pbclient = pbclient
         res = _add_tasks(self.config, tasks, 'doc', 0, 30)
-        assert res == "Unknown format for the tasks file. Use json, csv or po.", res
+        assert res == ("Unknown format for the tasks file. Use json, csv, po or "
+                      "properties."), res
 
     @patch('helpers.find_app_by_short_name')
     def test_add_tasks_csv_connection_error(self, find_mock):
