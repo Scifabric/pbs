@@ -11,7 +11,7 @@ class TestDefault(object):
              "exception_msg": "(NotFound)",
              "status": "failed",
              "status_code": 404,
-             "target": "/api/app"}
+             "target": "/api/project"}
 
     error_task = {"action": "GET",
                   "exception_cls": "NotFound",

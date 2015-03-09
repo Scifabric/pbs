@@ -19,7 +19,7 @@
 Helper functions for the pbs command line client.
 
 This module exports the following methods:
-    * find_app_by_short_name: return the project by short_name.
+    * find_project_by_short_name: return the project by short_name.
     * check_api_errors: check for API errors returned by a PyBossa server.
     * format_error: format error message.
     * format_json_task: format a CSV row into JSON.
@@ -34,7 +34,7 @@ import polib
 from requests import exceptions
 from pbsexceptions import ProjectNotFound, TaskNotFound
 
-__all__ = ['find_app_by_short_name', 'check_api_error',
+__all__ = ['find_project_by_short_name', 'check_api_error',
            'format_error', 'format_json_task', '_create_project',
            '_update_project', '_add_tasks', 'create_task_info',
            '_delete_tasks', 'enable_auto_throttling',
@@ -44,9 +44,9 @@ __all__ = ['find_app_by_short_name', 'check_api_error',
 def _create_project(config):
     """Create a project in a PyBossa server."""
     try:
-        response = config.pbclient.create_app(config.project['name'],
-                                              config.project['short_name'],
-                                              config.project['description'])
+        response = config.pbclient.create_project(config.project['name'],
+                                                  config.project['short_name'],
+                                                  config.project['description'])
         check_api_error(response)
         return ("Project: %s created!" % config.project['short_name'])
     except exceptions.ConnectionError:
@@ -59,7 +59,7 @@ def _update_project(config, task_presenter, long_description, tutorial):
     """Update a project."""
     try:
         # Get project
-        project = find_app_by_short_name(config.project['short_name'],
+        project = find_project_by_short_name(config.project['short_name'],
                                          config.pbclient)
         # Update attributes
         project.name = config.project['name']
@@ -70,7 +70,7 @@ def _update_project(config, task_presenter, long_description, tutorial):
         project.info['task_presenter'] = task_presenter.read()
         # Update tutorial
         project.info['tutorial'] = tutorial.read()
-        response = config.pbclient.update_app(project)
+        response = config.pbclient.update_project(project)
         check_api_error(response)
         return ("Project %s updated!" % config.project['short_name'])
     except exceptions.ConnectionError:
@@ -82,7 +82,7 @@ def _update_project(config, task_presenter, long_description, tutorial):
 def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
     """Add tasks to a project."""
     try:
-        project = find_app_by_short_name(config.project['short_name'],
+        project = find_project_by_short_name(config.project['short_name'],
                                          config.pbclient)
         tasks = tasks_file.read()
         if tasks_type is None:
@@ -123,7 +123,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         with click.progressbar(data, label="Adding Tasks") as pgbar:
             for d in pgbar:
                 task_info = create_task_info(d)
-                response = config.pbclient.create_task(app_id=project.id,
+                response = config.pbclient.create_task(project_id=project.id,
                                                        info=task_info,
                                                        n_answers=redundancy,
                                                        priority_0=priority)
@@ -142,7 +142,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
 def _delete_tasks(config, task_id, limit=100, offset=0):
     """Delete tasks from a project."""
     try:
-        project = find_app_by_short_name(config.project['short_name'],
+        project = find_project_by_short_name(config.project['short_name'],
                                          config.pbclient)
         if task_id:
             response = config.pbclient.delete_task(task_id)
@@ -168,7 +168,7 @@ def _delete_tasks(config, task_id, limit=100, offset=0):
 def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
     """Update tasks redundancy from a project."""
     try:
-        project = find_app_by_short_name(config.project['short_name'],
+        project = find_project_by_short_name(config.project['short_name'],
                                          config.pbclient)
         if task_id:
             response = config.pbclient.find_tasks(project.id, id=task_id)
@@ -207,10 +207,10 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
         raise
 
 
-def find_app_by_short_name(short_name, pbclient):
+def find_project_by_short_name(short_name, pbclient):
     """Return project by short_name."""
     try:
-        response = pbclient.find_app(short_name=short_name)
+        response = pbclient.find_project(short_name=short_name)
         check_api_error(response)
         return response[0]
     except exceptions.ConnectionError:
@@ -222,7 +222,7 @@ def find_app_by_short_name(short_name, pbclient):
 def check_api_error(api_response):
     """Check if returned API response contains an error."""
     if type(api_response) == dict and (api_response.get('status') == 'failed'):
-        if 'app' in api_response.get('target'):
+        if 'project' in api_response.get('target'):
             raise ProjectNotFound(message='PyBossa Project not found',
                                   error=api_response)
         if 'task' in api_response.get('target'):

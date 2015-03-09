@@ -16,7 +16,7 @@ class TestPbsCreateProject(TestDefault):
     def test_create_project_create(self):
         """Test create_project works."""
         pbclient = MagicMock()
-        pbclient.create_app.return_value = {'short_name': 'short_name'}
+        pbclient.create_project.return_value = {'short_name': 'short_name'}
         self.config.pbclient = pbclient
         res = _create_project(self.config)
         assert res == 'Project: short_name created!', res
@@ -24,7 +24,7 @@ class TestPbsCreateProject(TestDefault):
     def test_create_project_connection_error(self):
         """Test create_project connection error works."""
         pbclient = MagicMock()
-        pbclient.create_app.side_effect = exceptions.ConnectionError
+        pbclient.create_project.side_effect = exceptions.ConnectionError
         self.config.pbclient = pbclient
         res = _create_project(self.config)
         assert res == "Connection Error! The server http://server is not responding", res
@@ -32,6 +32,6 @@ class TestPbsCreateProject(TestDefault):
     def test_create_project_another_error(self):
         """Test create_project another error works."""
         pbclient = MagicMock()
-        pbclient.create_app.return_value = self.error
+        pbclient.create_project.return_value = self.error
         self.config.pbclient = pbclient
         assert_raises(ProjectNotFound, _create_project, self.config)

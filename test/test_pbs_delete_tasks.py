@@ -13,7 +13,7 @@ class TestPbsDeleteTask(TestDefault):
 
     """Test class for pbs delete task commands."""
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_delete_task(self, find_mock):
         """Test delete task works."""
         project = MagicMock()
@@ -30,7 +30,7 @@ class TestPbsDeleteTask(TestDefault):
         res = _delete_tasks(self.config, 1)
         assert res == "Task.id = 1 and its associated task_runs have been deleted", res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_delete_all_tasks(self, find_mock):
         """Test delete all tasks works."""
         project = MagicMock()
@@ -51,7 +51,7 @@ class TestPbsDeleteTask(TestDefault):
         res = _delete_tasks(self.config, None, limit=1, offset=0)
         assert res == "All tasks and task_runs have been deleted", res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_delete_connection_error(self, find_mock):
         """Test delete tasks connection error works."""
         project = MagicMock()
@@ -68,7 +68,7 @@ class TestPbsDeleteTask(TestDefault):
         res = _delete_tasks(self.config, 1)
         assert res == "Connection Error! The server http://server is not responding", res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_delete_connection_error_all_tasks(self, find_mock):
         """Test delete tasks connection error works for all tasks."""
         project = MagicMock()
@@ -88,7 +88,7 @@ class TestPbsDeleteTask(TestDefault):
         res = _delete_tasks(self.config, None)
         assert res == "Connection Error! The server http://server is not responding", res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_delete_another_error_all_tasks(self, find_mock):
         """Test delete tasks another error works for all tasks."""
         project = MagicMock()
@@ -107,7 +107,7 @@ class TestPbsDeleteTask(TestDefault):
         self.config.pbclient = pbclient
         assert_raises(ProjectNotFound, _delete_tasks, self.config, None)
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_delete_another_error_one_tasks(self, find_mock):
         """Test delete tasks another error works for one task."""
         project = MagicMock()

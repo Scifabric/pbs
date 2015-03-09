@@ -13,29 +13,29 @@ class TestHelpers(TestDefault):
 
     """Test class for pbs.helpers."""
 
-    @patch('pbclient.find_app')
-    def test_find_app_by_short_name(self, mock):
-        """Test find_app_by_short_name returns a project."""
+    @patch('pbclient.find_project')
+    def test_find_project_by_short_name(self, mock):
+        """Test find_project_by_short_name returns a project."""
         mock.return_value = ['project']
-        project = find_app_by_short_name('project', pbclient)
+        project = find_project_by_short_name('project', pbclient)
         err_msg = "It shoul return: project"
         assert project == 'project', err_msg
 
-    @patch('pbclient.find_app')
-    def test_find_app_by_short_name_connection_error(self, mock):
-        """Test find_app_by_short_name connection_error is raised."""
+    @patch('pbclient.find_project')
+    def test_find_project_by_short_name_connection_error(self, mock):
+        """Test find_project_by_short_name connection_error is raised."""
         mock.side_effect = exceptions.ConnectionError
         assert_raises(exceptions.ConnectionError,
-                      find_app_by_short_name,
+                      find_project_by_short_name,
                       'project',
                       pbclient)
 
     @patch('helpers.format_error')
-    @patch('pbclient.find_app')
-    def test_find_app_by_short_name_error(self, mock, mock2):
-        """Test find_app_by_short_name error is printed."""
+    @patch('pbclient.find_project')
+    def test_find_project_by_short_name_error(self, mock, mock2):
+        """Test find_project_by_short_name error is printed."""
         mock.return_value = self.error
-        assert_raises(ProjectNotFound, find_app_by_short_name, 'project',
+        assert_raises(ProjectNotFound, find_project_by_short_name, 'project',
                       pbclient)
 
     def test_check_api_error_raises_exception(self):
@@ -51,11 +51,11 @@ class TestHelpers(TestDefault):
         error = 'not_a_dict'
         check_api_error(error)
 
-    @patch('pbclient.find_app')
+    @patch('pbclient.find_project')
     def test_format_error(self, mock):
         """Test format_error works."""
         e = ProjectNotFound(message="m", error=dict(error="error"))
-        assert_raises(SystemExit, format_error, 'pbclient.find_app', e)
+        assert_raises(SystemExit, format_error, 'pbclient.find_project', e)
 
     def test_format_json_task(self):
         """Test format_json_task works."""
