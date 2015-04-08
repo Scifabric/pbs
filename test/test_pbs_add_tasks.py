@@ -10,7 +10,7 @@ class TestPbsAddTask(TestDefault):
 
     """Test class for pbs add tasks commands."""
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_json_with_info(self, find_mock):
         """Test add_tasks json with info field works."""
         project = MagicMock()
@@ -30,7 +30,7 @@ class TestPbsAddTask(TestDefault):
         res = _add_tasks(self.config, tasks, 'json', 0, 30)
         assert res == '1 tasks added to project: short_name', res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_json_from_filextension(self, find_mock):
         """Test add_tasks json without specifying file extension works."""
         project = MagicMock()
@@ -51,7 +51,7 @@ class TestPbsAddTask(TestDefault):
         res = _add_tasks(self.config, tasks, None, 0, 30)
         assert res == '1 tasks added to project: short_name', res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_csv_with_info(self, find_mock):
         """Test add_tasks csv with info field works."""
         project = MagicMock()
@@ -71,7 +71,7 @@ class TestPbsAddTask(TestDefault):
         res = _add_tasks(self.config, tasks, 'csv', 0, 30)
         assert res == '1 tasks added to project: short_name', res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_csv_from_filextension(self, find_mock):
         """Test add_tasks csv without specifying file extension works."""
         project = MagicMock()
@@ -92,7 +92,7 @@ class TestPbsAddTask(TestDefault):
         res = _add_tasks(self.config, tasks, None, 0, 30)
         assert res == '1 tasks added to project: short_name', res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_json_without_info(self, find_mock):
         """Test add_tasks json without info field works."""
         project = MagicMock()
@@ -112,7 +112,7 @@ class TestPbsAddTask(TestDefault):
         res = _add_tasks(self.config, tasks, 'json', 0, 30)
         assert res == '1 tasks added to project: short_name', res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_csv_without_info(self, find_mock):
         """Test add_tasks csv without info field works."""
         project = MagicMock()
@@ -132,7 +132,7 @@ class TestPbsAddTask(TestDefault):
         res = _add_tasks(self.config, tasks, 'csv', 0, 30)
         assert res == '1 tasks added to project: short_name', res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_unknow_type_from_filextension(self, find_mock):
         """Test add_tasks with unknown type from file extension works."""
         project = MagicMock()
@@ -154,7 +154,7 @@ class TestPbsAddTask(TestDefault):
         assert res == ("Unknown format for the tasks file. Use json, csv, po or "
                       "properties."), res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_unknow_type(self, find_mock):
         """Test add_tasks with unknown type works."""
         project = MagicMock()
@@ -175,7 +175,7 @@ class TestPbsAddTask(TestDefault):
         assert res == ("Unknown format for the tasks file. Use json, csv, po or "
                       "properties."), res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_csv_connection_error(self, find_mock):
         """Test add_tasks csv connection error works."""
         project = MagicMock()
@@ -195,7 +195,7 @@ class TestPbsAddTask(TestDefault):
         res = _add_tasks(self.config, tasks, 'csv', 0, 30)
         assert res == "Connection Error! The server http://server is not responding", res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_json_connection_error(self, find_mock):
         """Test add_tasks json connection error works."""
         project = MagicMock()
@@ -215,7 +215,7 @@ class TestPbsAddTask(TestDefault):
         res = _add_tasks(self.config, tasks, 'json', 0, 30)
         assert res == "Connection Error! The server http://server is not responding", res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_another_error(self, find_mock):
         """Test add_tasks another error works."""
         project = MagicMock()
@@ -236,7 +236,7 @@ class TestPbsAddTask(TestDefault):
                       tasks, 'json', 0, 30)
 
     @patch('polib.pofile')
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_po_with_info(self, find_mock, po_mock):
         """Test add_tasks po with info field works."""
         project = MagicMock()
@@ -265,7 +265,7 @@ class TestPbsAddTask(TestDefault):
         assert res == '1 tasks added to project: short_name', res
 
     @patch('polib.pofile')
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_po_from_filextension(self, find_mock, po_mock):
         """Test add_tasks po without specifying file extension works."""
         project = MagicMock()
@@ -294,7 +294,7 @@ class TestPbsAddTask(TestDefault):
         res = _add_tasks(self.config, tasks, None, 0, 30)
         assert res == '1 tasks added to project: short_name', res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_properties_with_info(self, find_mock):
         """Test add_tasks properties with info field works."""
         project = MagicMock()
@@ -314,7 +314,7 @@ class TestPbsAddTask(TestDefault):
         res = _add_tasks(self.config, tasks, 'properties', 0, 30)
         assert res == '1 tasks added to project: short_name', res
 
-    @patch('helpers.find_app_by_short_name')
+    @patch('helpers.find_project_by_short_name')
     def test_add_tasks_properties_from_filextension(self, find_mock):
         """Test add_tasks properties without specifying file extension works."""
         project = MagicMock()

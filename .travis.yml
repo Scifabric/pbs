@@ -9,5 +9,3 @@ install:
 script: nosetests test/
 after_success:
   - coveralls
-notifications:
-  hipchat: 11e2176ebb4b7372ee0d1fbc8abf4d@Github
