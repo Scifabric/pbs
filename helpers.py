@@ -24,7 +24,7 @@ This module exports the following methods:
     * format_error: format error message.
     * format_json_task: format a CSV row into JSON.
 """
-import sys
+import os
 import csv
 import json
 import time
@@ -64,11 +64,11 @@ def _update_project_watch(config, task_presenter, long_description, tutorial):
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-    path = sys.argv[1] if len(sys.argv) > 1 else '.'
+    path = os.getcwd()
     event_handler = LoggingEventHandler()
     observer = Observer()
     # We only want the current folder, not sub-folders
-    observer.schedule(event_handler, path, recursive=False)
+    observer.schedule(event_handler, path, recursive=True)
     observer.start()
     try:
         while True:
