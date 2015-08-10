@@ -24,21 +24,26 @@ This module exports the following methods:
     * format_error: format error message.
     * format_json_task: format a CSV row into JSON.
 """
+import re
+import os
 import csv
 import json
 import time
 import click
-import logging
 from StringIO import StringIO
 import polib
 from requests import exceptions
 from pbsexceptions import ProjectNotFound, TaskNotFound
+import logging
+from watchdog.observers import Observer
+from watchdog.events import PatternMatchingEventHandler
 
 __all__ = ['find_project_by_short_name', 'check_api_error',
            'format_error', 'format_json_task', '_create_project',
            '_update_project', '_add_tasks', 'create_task_info',
            '_delete_tasks', 'enable_auto_throttling',
-           '_update_tasks_redundancy']
+           '_update_tasks_redundancy',
+           '_update_project_watch', 'PbsHandler']
 
 
 def _create_project(config):
@@ -54,6 +59,25 @@ def _create_project(config):
     except (ProjectNotFound, TaskNotFound):
         raise
 
+def _update_project_watch(config, task_presenter, long_description, tutorial):  # pragma: no cover
+    """Update a project in a loop."""
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
+    path = os.getcwd()
+    event_handler = PbsHandler(config, task_presenter,
+                               long_description, tutorial)
+    observer = Observer()
+    # We only want the current folder, not sub-folders
+    observer.schedule(event_handler, path, recursive=False)
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
+
 
 def _update_project(config, task_presenter, long_description, tutorial):
     """Update a project."""
@@ -65,11 +89,15 @@ def _update_project(config, task_presenter, long_description, tutorial):
         project.name = config.project['name']
         project.short_name = config.project['short_name']
         project.description = config.project['description']
-        project.long_description = long_description.read()
+        # Update long_description
+        with open(long_description, 'r') as f:
+            project.long_description = f.read()
         # Update task presenter
-        project.info['task_presenter'] = task_presenter.read()
+        with open(task_presenter, 'r') as f:
+            project.info['task_presenter'] = f.read()
         # Update tutorial
-        project.info['tutorial'] = tutorial.read()
+        with open(tutorial, 'r') as f:
+            project.info['tutorial'] = f.read()
         response = config.pbclient.update_project(project)
         check_api_error(response)
         return ("Project %s updated!" % config.project['short_name'])
@@ -267,3 +295,22 @@ def format_json_task(task_info):
         return json.loads(task_info)
     except:
         return task_info
+
+
+class PbsHandler(PatternMatchingEventHandler):
+
+    patterns = ['*/template.html', '*/tutorial.html', '*/long_description.md']
+
+    def __init__(self, config, task_presenter, long_description, tutorial):
+        super(PbsHandler, self).__init__()
+        self.config = config
+        self.task_presenter = task_presenter
+        self.long_description = long_description
+        self.tutorial = tutorial
+
+    def on_modified(self, event):
+        what = 'directory' if event.is_directory else 'file'
+        logging.info("Modified %s: %s", what, event.src_path)
+        res = _update_project(self.config, self.task_presenter,
+                              self.long_description, self.tutorial)
+        logging.info(res)

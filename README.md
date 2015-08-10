@@ -167,6 +167,24 @@ options, please check the **--help** command:
     pbs update_project --help
 ```
 
+### Auto-updating while developing a PyBossa project
+
+At some point you will end up running lots of pbs update_project commands, as 
+you will be using your own editor for fixing CSS, HTML or JavaScript. For these
+scenarios, pbs comes with a handy feature: --watch. This argument will tell pbs
+to run update_project automatically when template.html, tutorial.html or
+long_description.md are modified in the file system. As simple as that.
+
+You can run it like this:
+
+```bash
+    pbs update_project --watch
+```
+
+And the output will be similar to this:
+
+![GIF of pbs in action](http://i.imgur.com/QoYC4oV.gif)
+
 ## Updating tasks redundancy from a project
 
 If you need it, you can update the redundancy of a task using its ID or all the

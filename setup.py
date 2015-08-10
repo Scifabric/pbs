@@ -15,7 +15,7 @@ except ImportError:
 
 setup(
     name="pybossa-pbs",
-    version="1.7.2",
+    version="1.7.3",
     author="Daniel Lombraña González",
     author_email="info@pybossa.com",
     description="PyBossa command line client",
@@ -29,8 +29,8 @@ setup(
                    'Operating System :: OS Independent',
                    'Programming Language :: Python',],
     py_modules=['pbs', 'helpers', 'pbsexceptions'],
-    install_requires=['Click', 'pybossa-client>=1.0.2, <1.0.3', 'requests', 'nose', 'mock', 'coverage',
-                      'rednose', 'pypandoc', 'simplejson', 'jsonschema', 'polib'],
+    install_requires=['Click', 'pybossa-client>=1.0.3, <1.0.4', 'requests', 'nose', 'mock', 'coverage',
+                      'rednose', 'pypandoc', 'simplejson', 'jsonschema', 'polib', 'watchdog'],
     entry_points='''
         [console_scripts]
         pbs=pbs:cli
