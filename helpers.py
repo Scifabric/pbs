@@ -24,6 +24,7 @@ This module exports the following methods:
     * format_error: format error message.
     * format_json_task: format a CSV row into JSON.
 """
+import sys
 import csv
 import json
 import time
@@ -33,12 +34,16 @@ from StringIO import StringIO
 import polib
 from requests import exceptions
 from pbsexceptions import ProjectNotFound, TaskNotFound
+import logging
+from watchdog.observers import Observer
+from watchdog.events import LoggingEventHandler
 
 __all__ = ['find_project_by_short_name', 'check_api_error',
            'format_error', 'format_json_task', '_create_project',
            '_update_project', '_add_tasks', 'create_task_info',
            '_delete_tasks', 'enable_auto_throttling',
-           '_update_tasks_redundancy']
+           '_update_tasks_redundancy',
+           '_update_project_watch']
 
 
 def _create_project(config):
@@ -53,6 +58,24 @@ def _create_project(config):
         return("Connection Error! The server %s is not responding" % config.server)
     except (ProjectNotFound, TaskNotFound):
         raise
+
+def _update_project_watch(config, task_presenter, long_description, tutorial):
+    """Update a project in a loop."""
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
+    path = sys.argv[1] if len(sys.argv) > 1 else '.'
+    event_handler = LoggingEventHandler()
+    observer = Observer()
+    # We only want the current folder, not sub-folders
+    observer.schedule(event_handler, path, recursive=False)
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
 
 
 def _update_project(config, task_presenter, long_description, tutorial):
