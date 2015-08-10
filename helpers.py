@@ -311,7 +311,6 @@ class PbsHandler(PatternMatchingEventHandler):
     def on_modified(self, event):
         what = 'directory' if event.is_directory else 'file'
         logging.info("Modified %s: %s", what, event.src_path)
-        logging.info("Updating project")
         res = _update_project(self.config, self.task_presenter,
                               self.long_description, self.tutorial)
         logging.info(res)
