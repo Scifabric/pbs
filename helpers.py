@@ -43,7 +43,7 @@ __all__ = ['find_project_by_short_name', 'check_api_error',
            '_update_project', '_add_tasks', 'create_task_info',
            '_delete_tasks', 'enable_auto_throttling',
            '_update_tasks_redundancy',
-           '_update_project_watch']
+           '_update_project_watch', 'PbsHandler']
 
 
 def _create_project(config):
@@ -59,7 +59,7 @@ def _create_project(config):
     except (ProjectNotFound, TaskNotFound):
         raise
 
-def _update_project_watch(config, task_presenter, long_description, tutorial):
+def _update_project_watch(config, task_presenter, long_description, tutorial):  # pragma: no cover
     """Update a project in a loop."""
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',

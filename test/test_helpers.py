@@ -89,3 +89,10 @@ class TestHelpers(TestDefault):
         sleep, msg = enable_auto_throttling(range(10), 10)
         assert sleep is False, "Throttling should not be enabled"
         assert msg is None, "Throttling should not be enabled"
+
+    def test_pbs_handler(self):
+        """Test PbsHandler patterns works."""
+        obj = PbsHandler(None, None, None, None)
+        patterns = ['*/template.html', '*/tutorial.html',
+                    '*/long_description.md']
+        assert obj.patterns == patterns, obj.patterns
