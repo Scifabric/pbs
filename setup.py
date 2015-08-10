@@ -30,7 +30,7 @@ setup(
                    'Programming Language :: Python',],
     py_modules=['pbs', 'helpers', 'pbsexceptions'],
     install_requires=['Click', 'pybossa-client>=1.0.2, <1.0.3', 'requests', 'nose', 'mock', 'coverage',
-                      'rednose', 'pypandoc', 'simplejson', 'jsonschema', 'polib'],
+                      'rednose', 'pypandoc', 'simplejson', 'jsonschema', 'polib', 'watchdog'],
     entry_points='''
         [console_scripts]
         pbs=pbs:cli
