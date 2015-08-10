@@ -96,3 +96,14 @@ class TestHelpers(TestDefault):
         patterns = ['*/template.html', '*/tutorial.html',
                     '*/long_description.md']
         assert obj.patterns == patterns, obj.patterns
+
+    @patch('helpers._update_project')
+    def test_pbs_handler_on_modified(self, mock):
+        """Test PbsHanlder.on_modified works."""
+        obj = PbsHandler('config', 'task_presenter',
+                         'long_description', 'tutorial')
+        event = MagicMock()
+        event.src_path = '/tmp/path.html'
+        obj.on_modified(event)
+        mock.assert_called_with('config', 'task_presenter',
+                                'long_description', 'tutorial')
