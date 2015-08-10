@@ -121,11 +121,11 @@ def create_project(config): # pragma: no cover
 
 @cli.command()
 @click.option('--task-presenter', help='The project task presenter file',
-              type=click.File('r'), default='template.html')
+              default='template.html')
 @click.option('--long-description', help='The project long description file (Markdown)',
-              type=click.File('r'), default='long_description.md')
+              default='long_description.md')
 @click.option('--tutorial', help='The project tutorial file',
-              type=click.File('r'), default='tutorial.html')
+              default='tutorial.html')
 @click.option('--watch/--no-watch', help='Watch for changes in the current folder and update the project',
               default=False)
 @pass_config
