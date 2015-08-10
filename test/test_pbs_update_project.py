@@ -22,14 +22,11 @@ class TestPbsUpdateProject(TestDefault):
 
         find_mock.return_value = project
 
-        task_presenter = MagicMock()
-        task_presenter.read.return_value = "presenter"
+        task_presenter = "test/template.html"
 
-        tutorial = MagicMock()
-        tutorial.read.return_value = "tutorial"
+        tutorial = "test/tutorial.html"
 
-        long_description = MagicMock()
-        long_description.read.return_value = "long_description"
+        long_description = "test/long_description.md"
 
         pbclient = MagicMock()
         pbclient.update_project.return_value = {'short_name': 'short_name'}
@@ -49,14 +46,11 @@ class TestPbsUpdateProject(TestDefault):
 
         find_mock.return_value = project
 
-        task_presenter = MagicMock()
-        task_presenter.read.return_value = "presenter"
+        task_presenter = "test/template.html"
 
-        tutorial = MagicMock()
-        tutorial.read.return_value = "tutorial"
+        tutorial = "test/tutorial.html"
 
-        long_description = MagicMock()
-        long_description.read.return_value = "long_description"
+        long_description = "test/long_description.md"
 
         pbclient = MagicMock()
         pbclient.update_project.side_effect = exceptions.ConnectionError
@@ -76,14 +70,11 @@ class TestPbsUpdateProject(TestDefault):
 
         find_mock.return_value = project
 
-        task_presenter = MagicMock()
-        task_presenter.read.return_value = "presenter"
+        task_presenter = "test/template.html"
 
-        tutorial = MagicMock()
-        tutorial.read.return_value = "tutorial"
+        tutorial = "test/tutorial.html"
 
-        long_description = MagicMock()
-        long_description.read.return_value = "long_description"
+        long_description = "test/long_description.md"
 
         pbclient = MagicMock()
         print self.error
