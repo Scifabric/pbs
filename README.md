@@ -13,6 +13,11 @@ you to create projects, add tasks (from a CSV, JSON, PO or a PROPERTIES file) wi
 progress bar, delete them and update the project templates 
 (tutorial, task_presenter, and descriptions) all from the command line.
 
+Requirements
+============
+
+[PyBossa server](http://pybossa.com) >= 0.2.3.
+
 Installation
 ============
 
