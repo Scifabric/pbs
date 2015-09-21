@@ -16,7 +16,7 @@ progress bar, delete them and update the project templates
 Requirements
 ============
 
-[PyBossa server](http://pybossa.com) >= 0.2.3.
+[PyBossa server](http://pybossa.com) >= 1.0.0.
 
 Installation
 ============
@@ -246,3 +246,9 @@ You have more documentation, with real examples at
 Check the [tutorial](http://docs.pybossa.com/en/latest/user/tutorial.html) as
 it uses **pbs**, and also its [pbs](http://docs.pybossa.com/en/latest/user/pbs.html) section
 in the site.
+
+# Copyright / License
+
+Copyright (C) 2015 [SciFabric LTD](http://scifabric.com).
+
+License: see LICENSE file.

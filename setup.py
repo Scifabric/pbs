@@ -15,9 +15,9 @@ except ImportError:
 
 setup(
     name="pybossa-pbs",
-    version="1.7.3",
-    author="Daniel Lombraña González",
-    author_email="info@pybossa.com",
+    version="2.0.0",
+    author="SciFabric LTD",
+    author_email="info@scifabric.com",
     description="PyBossa command line client",
     long_description=long_description,
     license="AGPLv3",
