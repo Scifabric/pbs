@@ -16,7 +16,7 @@ progress bar, delete them and update the project templates
 Requirements
 ============
 
-[PyBossa server](http://pybossa.com) >= 1.0.0.
+[PyBossa server](http://pybossa.com) >= 1.1.0.
 
 Installation
 ============
