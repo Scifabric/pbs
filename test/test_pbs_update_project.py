@@ -24,6 +24,8 @@ class TestPbsUpdateProject(TestDefault):
 
         task_presenter = "test/template.html"
 
+        results = "test/results.html"
+
         tutorial = "test/tutorial.html"
 
         long_description = "test/long_description.md"
@@ -31,7 +33,7 @@ class TestPbsUpdateProject(TestDefault):
         pbclient = MagicMock()
         pbclient.update_project.return_value = {'short_name': 'short_name'}
         self.config.pbclient = pbclient
-        res = _update_project(self.config, task_presenter,
+        res = _update_project(self.config, task_presenter, results,
                               long_description, tutorial)
         assert res == 'Project short_name updated!', res
 
@@ -48,6 +50,8 @@ class TestPbsUpdateProject(TestDefault):
 
         task_presenter = "test/template.html"
 
+        results = "test/results.html"
+
         tutorial = "test/tutorial.html"
 
         long_description = "test/long_description.md"
@@ -55,7 +59,7 @@ class TestPbsUpdateProject(TestDefault):
         pbclient = MagicMock()
         pbclient.update_project.side_effect = exceptions.ConnectionError
         self.config.pbclient = pbclient
-        res = _update_project(self.config, task_presenter,
+        res = _update_project(self.config, task_presenter, results,
                               long_description, tutorial)
         assert res == "Connection Error! The server http://server is not responding", res
 
@@ -72,13 +76,14 @@ class TestPbsUpdateProject(TestDefault):
 
         task_presenter = "test/template.html"
 
+        results = "test/results.html"
+
         tutorial = "test/tutorial.html"
 
         long_description = "test/long_description.md"
 
         pbclient = MagicMock()
-        print self.error
         pbclient.update_project.return_value = self.error
         self.config.pbclient = pbclient
         assert_raises(ProjectNotFound, _update_project, self.config,
-                      task_presenter, long_description, tutorial)
+                      task_presenter, results, long_description, tutorial)
