@@ -59,13 +59,14 @@ def _create_project(config):
     except (ProjectNotFound, TaskNotFound):
         raise
 
-def _update_project_watch(config, task_presenter, long_description, tutorial):  # pragma: no cover
+def _update_project_watch(config, task_presenter, results,
+                          long_description, tutorial):  # pragma: no cover
     """Update a project in a loop."""
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
     path = os.getcwd()
-    event_handler = PbsHandler(config, task_presenter,
+    event_handler = PbsHandler(config, task_presenter, results,
                                long_description, tutorial)
     observer = Observer()
     # We only want the current folder, not sub-folders
@@ -79,7 +80,8 @@ def _update_project_watch(config, task_presenter, long_description, tutorial):  
     observer.join()
 
 
-def _update_project(config, task_presenter, long_description, tutorial):
+def _update_project(config, task_presenter, results,
+                    long_description, tutorial):
     """Update a project."""
     try:
         # Get project
@@ -95,6 +97,9 @@ def _update_project(config, task_presenter, long_description, tutorial):
         # Update task presenter
         with open(task_presenter, 'r') as f:
             project.info['task_presenter'] = f.read()
+        # Update results
+        with open(results, 'r') as f:
+            project.info['results'] = f.read()
         # Update tutorial
         with open(tutorial, 'r') as f:
             project.info['tutorial'] = f.read()
