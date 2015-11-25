@@ -304,18 +304,21 @@ def format_json_task(task_info):
 
 class PbsHandler(PatternMatchingEventHandler):
 
-    patterns = ['*/template.html', '*/tutorial.html', '*/long_description.md']
+    patterns = ['*/template.html', '*/tutorial.html',
+                '*/long_description.md', '*/results.html']
 
-    def __init__(self, config, task_presenter, long_description, tutorial):
+    def __init__(self, config, task_presenter, results,
+                 long_description, tutorial):
         super(PbsHandler, self).__init__()
         self.config = config
         self.task_presenter = task_presenter
+        self.results = results
         self.long_description = long_description
         self.tutorial = tutorial
 
     def on_modified(self, event):
         what = 'directory' if event.is_directory else 'file'
         logging.info("Modified %s: %s", what, event.src_path)
-        res = _update_project(self.config, self.task_presenter,
+        res = _update_project(self.config, self.task_presenter, self.results,
                               self.long_description, self.tutorial)
         logging.info(res)
