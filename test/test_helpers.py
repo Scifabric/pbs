@@ -92,9 +92,9 @@ class TestHelpers(TestDefault):
 
     def test_pbs_handler(self):
         """Test PbsHandler patterns works."""
-        obj = PbsHandler(None, None, None, None)
+        obj = PbsHandler(None, None, None, None, None)
         patterns = ['*/template.html', '*/tutorial.html',
-                    '*/long_description.md']
+                    '*/long_description.md', '*/results.html']
         assert obj.patterns == patterns, obj.patterns
 
     @patch('helpers._update_project')
