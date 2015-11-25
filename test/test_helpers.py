@@ -100,10 +100,10 @@ class TestHelpers(TestDefault):
     @patch('helpers._update_project')
     def test_pbs_handler_on_modified(self, mock):
         """Test PbsHanlder.on_modified works."""
-        obj = PbsHandler('config', 'task_presenter',
+        obj = PbsHandler('config', 'task_presenter', 'results',
                          'long_description', 'tutorial')
         event = MagicMock()
         event.src_path = '/tmp/path.html'
         obj.on_modified(event)
-        mock.assert_called_with('config', 'task_presenter',
+        mock.assert_called_with('config', 'task_presenter', 'results',
                                 'long_description', 'tutorial')
