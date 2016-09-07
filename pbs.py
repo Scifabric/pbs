@@ -16,11 +16,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with PyBOSSA.  If not, see <http://www.gnu.org/licenses/>.
 """
-A very simple PyBossa command line client.
+A very simple PYBOSSA command line client.
 
 This module is a pybossa-client that runs the following commands:
 
-    * create_project: to create a PyBossa project
+    * create_project: to create a PYBOSSA project
     * add_tasks: to add tasks to an existing project
     * delete_tasks: to delete all tasks and task_runs from an existing project
 
@@ -47,6 +47,7 @@ class Config(object):
         self.server = None
         self.api_key = None
         self.project = None
+        self.all = None
         self.pbclient = pbclient
         self.parser = ConfigParser.ConfigParser()
 
@@ -54,13 +55,14 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
 
 
 @click.group()
-@click.option('--server',  help='The PyBossa server')
-@click.option('--api-key', help='Your PyBossa API-KEY')
-@click.option('--credentials', help='Use your PyBossa credentials in .pybossa.cfg file',
+@click.option('--server',  help='The PYBOSSA server')
+@click.option('--api-key', help='Your PYBOSSA API-KEY')
+@click.option('--all', help='Search across all projects')
+@click.option('--credentials', help='Use your PYBOSSA credentials in .pybossa.cfg file',
               default="default")
 @click.option('--project', type=click.File('r'), default='project.json')
 @pass_config
-def cli(config, server, api_key, credentials, project):
+def cli(config, server, api_key, all, credentials, project):
     """Create the cli command line."""
     # Check first for the pybossa.rc file to configure server and api-key
     home = expanduser("~")
@@ -68,10 +70,13 @@ def cli(config, server, api_key, credentials, project):
         config.parser.read(os.path.join(home, '.pybossa.cfg'))
         config.server = config.parser.get(credentials,'server')
         config.api_key = config.parser.get(credentials, 'apikey')
+        config.all = config.parser.get(credentials, 'all')
     if server:
         config.server = server
     if api_key:
         config.api_key = api_key
+    if all:
+        config.all = all
     try:
         config.project = json.loads(project.read())
     except JSONDecodeError as e:
@@ -114,7 +119,7 @@ def version():
 @cli.command()
 @pass_config
 def create_project(config): # pragma: no cover
-    """Create the PyBossa project."""
+    """Create the PYBOSSA project."""
     res = _create_project(config)
     click.echo(res)
 

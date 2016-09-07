@@ -5,10 +5,10 @@ Health](https://landscape.io/github/PyBossa/pbs/master/landscape.svg)](https://l
 
 
 
-PBS - a PyBossa command line interface
+PBS - a PYBOSSA command line interface
 ======================================
 
-**pbs** is a very simple command line interface to a PyBossa server. It allows
+**pbs** is a very simple command line interface to a PYBOSSA server. It allows
 you to create projects, add tasks (from a CSV, JSON, PO or a PROPERTIES file) with a nice
 progress bar, delete them and update the project templates 
 (tutorial, task_presenter, and descriptions) all from the command line.
@@ -16,7 +16,7 @@ progress bar, delete them and update the project templates
 Requirements
 ============
 
-[PyBossa server](http://pybossa.com) >= 1.2.0.
+[PYBOSSA server](http://pybossa.com) >= 1.2.0.
 
 Installation
 ============
@@ -47,7 +47,7 @@ integrate it back ;-)
 
 ## Configuring pbs
 
-pbs is very handy when you work with one or two PyBossa servers. The best way
+pbs is very handy when you work with one or two PYBOSSA servers. The best way
 to configure it is creating a simple config file in your home folder:
 
 ```bash
@@ -133,7 +133,7 @@ Therefore, adding tasks to your project is as simple as this command:
 If you want to see all the available
 options, please check the **--help** command:
 
-**NOTE**: By default PyBossa servers use a rate limit for avoiding abuse of the
+**NOTE**: By default PYBOSSA servers use a rate limit for avoiding abuse of the
 API. For this reason, you can only do usually 300 requests per every 15
 minutes. If you are going to add more than 300 tasks, pbs will detect it and
 warn you, auto-enabling the throttling for you to respect the limits.
@@ -172,7 +172,7 @@ options, please check the **--help** command:
     pbs update_project --help
 ```
 
-### Auto-updating while developing a PyBossa project
+### Auto-updating while developing a PYBOSSA project
 
 At some point you will end up running lots of pbs update_project commands, as 
 you will be using your own editor for fixing CSS, HTML or JavaScript. For these
