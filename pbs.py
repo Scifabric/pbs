@@ -126,7 +126,6 @@ def create_project(config): # pragma: no cover
     res = _create_project(config)
     click.echo(res)
 
-
 @cli.command()
 @click.option('--task-presenter', help='The project task presenter file',
               default='template.html')

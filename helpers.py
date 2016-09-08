@@ -109,7 +109,11 @@ def _update_project(config, task_presenter, results,
         return ("Project %s updated!" % config.project['short_name'])
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
-    except (ProjectNotFound, TaskNotFound):
+    except ProjectNotFound:
+        return ("Project not found! The project: %s is missing." \
+                " Use the flag --arg=1 to search in all the server " \
+                % config.project['short_name'])
+    except TaskNotFound:
         raise
 
 
