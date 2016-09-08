@@ -23,7 +23,7 @@ class TestHelpers(TestDefault):
 
     @patch('pbclient.find_project')
     def test_find_project_by_short_name_returns_no_project(self, mock):
-        """Test find_project_by_short_name returns a project."""
+        """Test find_project_by_short_name raises ProjectNotFound for all=0."""
         mock.return_value = []
         assert_raises(ProjectNotFound,
                       find_project_by_short_name,
