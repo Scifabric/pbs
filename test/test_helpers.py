@@ -22,6 +22,16 @@ class TestHelpers(TestDefault):
         assert project == 'project', err_msg
 
     @patch('pbclient.find_project')
+    def test_find_project_by_short_name_returns_no_project(self, mock):
+        """Test find_project_by_short_name returns a project."""
+        mock.return_value = []
+        assert_raises(ProjectNotFound,
+                      find_project_by_short_name,
+                      'project',
+                      pbclient)
+
+
+    @patch('pbclient.find_project')
     def test_find_project_by_short_name_connection_error(self, mock):
         """Test find_project_by_short_name connection_error is raised."""
         mock.side_effect = exceptions.ConnectionError
