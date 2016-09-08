@@ -86,6 +86,17 @@ in the other server all you have to do is the following:
 
 That command will use the values of the crowdcrafting section.
 
+### Getting out of the API context
+
+PYBOSSA by default returns first your projects, meaning that if you want to work
+on a project that you don't own, it will return an error as the project will not be
+found. For solving this issue you have two options:
+
+ * In the config file, by adding a new flag: all:1
+ * On the command line, passing the --all=1 flag
+
+
+
 ## Creating a project
 
 Creating a project is very simple. All you have to do is create a file named
