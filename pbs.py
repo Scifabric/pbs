@@ -35,8 +35,6 @@ import ConfigParser
 import os.path
 from os.path import expanduser
 from helpers import *
-import pbsexceptions
-from requests import exceptions
 
 
 class Config(object):
