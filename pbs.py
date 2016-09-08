@@ -70,7 +70,10 @@ def cli(config, server, api_key, all, credentials, project):
         config.parser.read(os.path.join(home, '.pybossa.cfg'))
         config.server = config.parser.get(credentials,'server')
         config.api_key = config.parser.get(credentials, 'apikey')
-        config.all = config.parser.get(credentials, 'all')
+        try:
+            config.all = config.parser.get(credentials, 'all')
+        except ConfigParser.NoOptionError:
+            config.all = None
     if server:
         config.server = server
     if api_key:
