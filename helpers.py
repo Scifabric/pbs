@@ -86,7 +86,8 @@ def _update_project(config, task_presenter, results,
     try:
         # Get project
         project = find_project_by_short_name(config.project['short_name'],
-                                         config.pbclient)
+                                             config.pbclient,
+                                             config.all)
         # Update attributes
         project.name = config.project['name']
         project.short_name = config.project['short_name']
@@ -116,7 +117,8 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
     """Add tasks to a project."""
     try:
         project = find_project_by_short_name(config.project['short_name'],
-                                         config.pbclient)
+                                             config.pbclient,
+                                             config.all)
         tasks = tasks_file.read()
         if tasks_type is None:
             tasks_type = tasks_file.name.split('.')[-1]
@@ -176,7 +178,8 @@ def _delete_tasks(config, task_id, limit=100, offset=0):
     """Delete tasks from a project."""
     try:
         project = find_project_by_short_name(config.project['short_name'],
-                                         config.pbclient)
+                                             config.pbclient,
+                                             config.all)
         if task_id:
             response = config.pbclient.delete_task(task_id)
             check_api_error(response)
@@ -202,7 +205,8 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
     """Update tasks redundancy from a project."""
     try:
         project = find_project_by_short_name(config.project['short_name'],
-                                         config.pbclient)
+                                             config.pbclient,
+                                             config.all)
         if task_id:
             response = config.pbclient.find_tasks(project.id, id=task_id)
             check_api_error(response)
@@ -240,10 +244,10 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
         raise
 
 
-def find_project_by_short_name(short_name, pbclient):
+def find_project_by_short_name(short_name, pbclient, all=None):
     """Return project by short_name."""
     try:
-        response = pbclient.find_project(short_name=short_name)
+        response = pbclient.find_project(short_name=short_name, all=all)
         check_api_error(response)
         return response[0]
     except exceptions.ConnectionError:
