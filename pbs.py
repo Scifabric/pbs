@@ -35,6 +35,8 @@ import ConfigParser
 import os.path
 from os.path import expanduser
 from helpers import *
+import pbsexceptions
+from requests import exceptions
 
 
 class Config(object):
@@ -126,7 +128,6 @@ def create_project(config): # pragma: no cover
     res = _create_project(config)
     click.echo(res)
 
-
 @cli.command()
 @click.option('--task-presenter', help='The project task presenter file',
               default='template.html')
@@ -142,19 +143,13 @@ def create_project(config): # pragma: no cover
 def update_project(config, task_presenter, results,
                    long_description, tutorial, watch): # pragma: no cover
     """Update project templates and information."""
-    try:
-        if watch:
-            res = _update_project_watch(config, task_presenter, results,
-                                        long_description, tutorial)
-        else:
-            res = _update_project(config, task_presenter, results,
-                                  long_description, tutorial)
-            click.echo(res)
-    except pbsexceptions.ProjectNotFound:
-        msg = "%s Project not found! Use the flag --all=1 \
-               to search in all the server" % config.project.short_name
-        click.echo(msg)
-
+    if watch:
+        res = _update_project_watch(config, task_presenter, results,
+                                    long_description, tutorial)
+    else:
+        res = _update_project(config, task_presenter, results,
+                              long_description, tutorial)
+        click.echo(res)
 
 
 @cli.command()

@@ -85,5 +85,8 @@ class TestPbsUpdateProject(TestDefault):
         pbclient = MagicMock()
         pbclient.update_project.return_value = self.error
         self.config.pbclient = pbclient
-        assert_raises(ProjectNotFound, _update_project, self.config,
-                      task_presenter, results, long_description, tutorial)
+        res = _update_project(self.config, task_presenter, results,
+                              long_description, tutorial)
+        msg = ("Project not found! The project: short_name is missing." \
+               " Use the flag --arg=1 to search in all the server ")
+        assert res == msg, msg
