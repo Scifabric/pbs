@@ -142,13 +142,19 @@ def create_project(config): # pragma: no cover
 def update_project(config, task_presenter, results,
                    long_description, tutorial, watch): # pragma: no cover
     """Update project templates and information."""
-    if watch:
-        res = _update_project_watch(config, task_presenter, results,
-                                    long_description, tutorial)
-    else:
-        res = _update_project(config, task_presenter, results,
-                              long_description, tutorial)
-        click.echo(res)
+    try:
+        if watch:
+            res = _update_project_watch(config, task_presenter, results,
+                                        long_description, tutorial)
+        else:
+            res = _update_project(config, task_presenter, results,
+                                  long_description, tutorial)
+            click.echo(res)
+    except pbsexceptions.ProjectNotFound:
+        msg = "%s Project not found! Use the flag --all=1 \
+               to search in all the server" % config.project.short_name
+        click.echo(msg)
+
 
 
 @cli.command()

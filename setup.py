@@ -15,10 +15,10 @@ except ImportError:
 
 setup(
     name="pybossa-pbs",
-    version="2.2.1",
+    version="2.2.2",
     author="SciFabric LTD",
     author_email="info@scifabric.com",
-    description="PyBossa command line client",
+    description="PYBOSSA command line client",
     long_description=long_description,
     license="AGPLv3",
     url="https://github.com/PyBossa/pbs",
