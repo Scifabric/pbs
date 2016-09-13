@@ -183,6 +183,20 @@ options, please check the **--help** command:
     pbs update_project --help
 ```
 
+### Using an external JavaScript file
+
+Since pbs >= 2.3.0, pbs will check for an external JavaScript file named *bundle.js*
+or *bundle.min.js*. If any of those files exist, then, they will be added at the bottom
+of your template (like you have been doing so far with your projects).
+
+This solution allows you to use for example webpack plus babel to transpile your code,
+minimize it and add it to your PYBOSSA project.
+
+In order to use this solution, just transpile to a file named bundle.js or bundle.min.js.
+
+**NOTE** If there's a minified version of the file, bundle.min.js, that file will be always used
+instead of bundle.js. 
+
 ### Auto-updating while developing a PYBOSSA project
 
 At some point you will end up running lots of pbs update_project commands, as 
@@ -200,6 +214,11 @@ You can run it like this:
 And the output will be similar to this:
 
 ![GIF of pbs in action](http://i.imgur.com/QoYC4oV.gif)
+
+
+**NOTE**: this also works with bundle.js files :smile: Thus, you can have webpack 
+transpiling automatically your code, and pbs will update automatically your project
+with the new code.
 
 ## Updating tasks redundancy from a project
 
