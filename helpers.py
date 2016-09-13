@@ -79,6 +79,12 @@ def _update_project_watch(config, task_presenter, results,
         observer.stop()
     observer.join()
 
+def _update_task_presenter_bundle_js(project):
+    """Append to template a distribution bundle js."""
+    if os.path.isfile ('dist/bundle.js'):
+        with open('dist/bundle.js') as f:
+            js = f.read()
+        project.info['task_presenter'] += "<script>\n%s\n</script>" % js
 
 def _update_project(config, task_presenter, results,
                     long_description, tutorial):
@@ -98,6 +104,7 @@ def _update_project(config, task_presenter, results,
         # Update task presenter
         with open(task_presenter, 'r') as f:
             project.info['task_presenter'] = f.read()
+        _update_task_presenter_bundle_js(project)
         # Update results
         with open(results, 'r') as f:
             project.info['results'] = f.read()
