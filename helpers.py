@@ -81,8 +81,8 @@ def _update_project_watch(config, task_presenter, results,
 
 def _update_task_presenter_bundle_js(project):
     """Append to template a distribution bundle js."""
-    if os.path.isfile ('dist/bundle.js'):
-        with open('dist/bundle.js') as f:
+    if os.path.isfile ('bundle.js'):
+        with open('bundle.js') as f:
             js = f.read()
         project.info['task_presenter'] += "<script>\n%s\n</script>" % js
 
@@ -325,7 +325,8 @@ def format_json_task(task_info):
 class PbsHandler(PatternMatchingEventHandler):
 
     patterns = ['*/template.html', '*/tutorial.html',
-                '*/long_description.md', '*/results.html']
+                '*/long_description.md', '*/results.html',
+                '*/bundle.js']
 
     def __init__(self, config, task_presenter, results,
                  long_description, tutorial):
