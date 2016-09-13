@@ -164,7 +164,7 @@ class TestHelpers(TestDefault):
         assert js in project.info['task_presenter'], err_msg
 
     @patch('helpers.os.path.isfile')
-    def test_update_bundle_js(self, mock):
+    def test_update_bundle_min_js(self, mock):
         """Test update task presenter with bundle.min.js."""
         items = [True, False]
         def return_effect(*args):
