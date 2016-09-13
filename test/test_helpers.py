@@ -118,3 +118,16 @@ class TestHelpers(TestDefault):
         obj.on_modified(event)
         mock.assert_called_with('config', 'task_presenter', 'results',
                                 'long_description', 'tutorial')
+
+    @patch('helpers.os.path.isfile')
+    def test_update_bundle_js(self, mock):
+        """Test update task presenter with bundle js."""
+        mock.return_value = False
+        presenter = '<div></div>'
+        project_dict = dict(short_name='foo',
+                            id=1,
+                            info={'task_presenter': presenter})
+        project = pbclient.Project(project_dict)
+        _update_task_presenter_bundle_js(project)
+        err_msg = "There should not be any JS as there is no bundle.js or bundle.min.js"
+        assert project.info['task_presenter'] == presenter, err_msg
