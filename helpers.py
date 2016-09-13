@@ -43,7 +43,8 @@ __all__ = ['find_project_by_short_name', 'check_api_error',
            '_update_project', '_add_tasks', 'create_task_info',
            '_delete_tasks', 'enable_auto_throttling',
            '_update_tasks_redundancy',
-           '_update_project_watch', 'PbsHandler']
+           '_update_project_watch', 'PbsHandler',
+           '_update_task_presenter_bundle_js']
 
 
 def _create_project(config):
@@ -79,6 +80,18 @@ def _update_project_watch(config, task_presenter, results,
         observer.stop()
     observer.join()
 
+def _update_task_presenter_bundle_js(project):
+    """Append to template a distribution bundle js."""
+    if os.path.isfile ('bundle.min.js'):
+        with open('bundle.min.js') as f:
+            js = f.read()
+        project.info['task_presenter'] += "<script>\n%s\n</script>" % js
+        return
+
+    if os.path.isfile ('bundle.js'):
+        with open('bundle.js') as f:
+            js = f.read()
+        project.info['task_presenter'] += "<script>\n%s\n</script>" % js
 
 def _update_project(config, task_presenter, results,
                     long_description, tutorial):
@@ -98,6 +111,8 @@ def _update_project(config, task_presenter, results,
         # Update task presenter
         with open(task_presenter, 'r') as f:
             project.info['task_presenter'] = f.read()
+        _update_task_presenter_bundle_js(project)
+        print project.info['task_presenter']
         # Update results
         with open(results, 'r') as f:
             project.info['results'] = f.read()
@@ -318,7 +333,8 @@ def format_json_task(task_info):
 class PbsHandler(PatternMatchingEventHandler):
 
     patterns = ['*/template.html', '*/tutorial.html',
-                '*/long_description.md', '*/results.html']
+                '*/long_description.md', '*/results.html',
+                '*/bundle.js', '*/bundle.min.js']
 
     def __init__(self, config, task_presenter, results,
                  long_description, tutorial):
