@@ -131,3 +131,52 @@ class TestHelpers(TestDefault):
         _update_task_presenter_bundle_js(project)
         err_msg = "There should not be any JS as there is no bundle.js or bundle.min.js"
         assert project.info['task_presenter'] == presenter, err_msg
+
+    @patch('helpers.os.path.isfile')
+    def test_update_not_bundle_js(self, mock):
+        """Test update task presenter with bundle js."""
+        mock.return_value = False
+        presenter = '<div></div>'
+        project_dict = dict(short_name='foo',
+                            id=1,
+                            info={'task_presenter': presenter})
+        project = pbclient.Project(project_dict)
+        _update_task_presenter_bundle_js(project)
+        err_msg = "There should not be any JS as there is no bundle.js or bundle.min.js"
+        assert project.info['task_presenter'] == presenter, err_msg
+
+    @patch('helpers.os.path.isfile')
+    def test_update_bundle_js(self, mock):
+        """Test update task presenter with bundle js."""
+        items = [False, True]
+        def return_effect(*args):
+            return items.pop(0)
+        mock.side_effect = return_effect
+        presenter = '<div></div>'
+        project_dict = dict(short_name='foo',
+                            id=1,
+                            info={'task_presenter': presenter})
+        project = pbclient.Project(project_dict)
+        _update_task_presenter_bundle_js(project)
+        with open('bundle.js') as f:
+            js = f.read()
+        err_msg = "There should be the content of bundle.js"
+        assert js in project.info['task_presenter'], err_msg
+
+    @patch('helpers.os.path.isfile')
+    def test_update_bundle_js(self, mock):
+        """Test update task presenter with bundle.min.js."""
+        items = [True, False]
+        def return_effect(*args):
+            return items.pop(0)
+        mock.side_effect = return_effect
+        presenter = '<div></div>'
+        project_dict = dict(short_name='foo',
+                            id=1,
+                            info={'task_presenter': presenter})
+        project = pbclient.Project(project_dict)
+        _update_task_presenter_bundle_js(project)
+        with open('bundle.min.js') as f:
+            js = f.read()
+        err_msg = "There should be the content of bundle.min.js"
+        assert js in project.info['task_presenter'], err_msg
