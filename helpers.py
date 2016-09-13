@@ -81,6 +81,12 @@ def _update_project_watch(config, task_presenter, results,
 
 def _update_task_presenter_bundle_js(project):
     """Append to template a distribution bundle js."""
+    if os.path.isfile ('bundle.min.js'):
+        with open('bundle.min.js') as f:
+            js = f.read()
+        project.info['task_presenter'] += "<script>\n%s\n</script>" % js
+        return
+
     if os.path.isfile ('bundle.js'):
         with open('bundle.js') as f:
             js = f.read()
@@ -105,6 +111,7 @@ def _update_project(config, task_presenter, results,
         with open(task_presenter, 'r') as f:
             project.info['task_presenter'] = f.read()
         _update_task_presenter_bundle_js(project)
+        print project.info['task_presenter']
         # Update results
         with open(results, 'r') as f:
             project.info['results'] = f.read()
@@ -326,7 +333,7 @@ class PbsHandler(PatternMatchingEventHandler):
 
     patterns = ['*/template.html', '*/tutorial.html',
                 '*/long_description.md', '*/results.html',
-                '*/bundle.js']
+                '*/bundle.js', '*/bundle.min.js']
 
     def __init__(self, config, task_presenter, results,
                  long_description, tutorial):
