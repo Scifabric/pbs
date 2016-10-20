@@ -112,7 +112,6 @@ def _update_project(config, task_presenter, results,
         with open(task_presenter, 'r') as f:
             project.info['task_presenter'] = f.read()
         _update_task_presenter_bundle_js(project)
-        print project.info['task_presenter']
         # Update results
         with open(results, 'r') as f:
             project.info['results'] = f.read()
