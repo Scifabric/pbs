@@ -15,7 +15,7 @@ except ImportError:
 
 setup(
     name="pybossa-pbs",
-    version="2.3.0",
+    version="2.3.1",
     author="SciFabric LTD",
     author_email="info@scifabric.com",
     description="PYBOSSA command line client",
