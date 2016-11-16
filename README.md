@@ -1,7 +1,6 @@
-[![Travis CI](https://travis-ci.org/PyBossa/pbs.svg?branch=master)](https://travis-ci.org/#!/PyBossa/pbs)
-[![Code
-Health](https://landscape.io/github/PyBossa/pbs/master/landscape.svg)](https://landscape.io/github/PyBossa/pbs/master)
-[![Coverage Status](https://img.shields.io/coveralls/PyBossa/pbs.svg)](https://coveralls.io/r/PyBossa/pbs?branch=master) [![Downloads](https://img.shields.io/pypi/dm/pybossa-pbs.svg)](https://pypi.python.org/pypi/pybossa-pbs/) [![Version](https://img.shields.io/pypi/v/pybossa-pbs.svg)](https://pypi.python.org/pypi/pybossa-pbs/)
+[![Travis CI](https://travis-ci.org/Scifabric/pbs.svg?branch=master)](https://travis-ci.org/#!/Scifabric/pbs)
+[![Code Health](https://landscape.io/github/Scifabric/pbs/master/landscape.svg?style=flat)](https://landscape.io/github/Scifabric/pbs/master)
+[![Coverage Status](https://img.shields.io/coveralls/Scifabric/pbs.svg)](https://coveralls.io/r/Scifabric/pbs?branch=master) [![Downloads](https://img.shields.io/pypi/dm/pybossa-pbs.svg)](https://pypi.python.org/pypi/pybossa-pbs/) [![Version](https://img.shields.io/pypi/v/pybossa-pbs.svg)](https://pypi.python.org/pypi/pybossa-pbs/)
 
 
 
