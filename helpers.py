@@ -47,7 +47,7 @@ __all__ = ['find_project_by_short_name', 'check_api_error',
            '_delete_tasks', 'enable_auto_throttling',
            '_update_tasks_redundancy',
            '_update_project_watch', 'PbsHandler',
-           '_update_task_presenter_bundle_js']
+           '_update_task_presenter_bundle_js', 'row_empty']
 
 
 def _create_project(config):

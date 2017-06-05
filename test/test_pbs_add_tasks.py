@@ -370,3 +370,12 @@ class TestPbsAddTask(TestDefault):
         self.config.pbclient = pbclient
         res = _add_tasks(self.config, tasks, None, 0, 30)
         assert res == '1 tasks added to project: short_name', res
+
+    def test_empty_row(self):
+        """Test that empty_row method detects it properly."""
+        empty = [None, None, None, None]
+        assert row_empty(empty) is True
+        empty = [None, None, None, 'foo']
+        assert row_empty(empty) is False
+        empty = [None, 'foo', None, 'foo']
+        assert row_empty(empty) is False
