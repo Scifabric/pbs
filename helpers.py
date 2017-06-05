@@ -242,7 +242,7 @@ def _add_helpingmaterials(config, helping_file, helping_type):
         if sleep:  # pragma: no cover
             click.secho(msg, fg='yellow')
         # Show progress bar
-        with click.progressbar(data, label="Adding Tasks") as pgbar:
+        with click.progressbar(data, label="Adding Helping Materials") as pgbar:
             for d in pgbar:
                 helping_info, file_path = create_helping_material_info(d)
                 if file_path:
@@ -264,7 +264,7 @@ def _add_helpingmaterials(config, helping_file, helping_type):
                 # If auto-throttling enabled, sleep for 3 seconds
                 if sleep:  # pragma: no cover
                     time.sleep(3)
-            return ("%s tasks added to project: %s" % (len(data),
+            return ("%s helping materials added to project: %s" % (len(data),
                     config.project['short_name']))
     except exceptions.ConnectionError:
         return ("Connection Error! The server %s is not responding" % config.server)
