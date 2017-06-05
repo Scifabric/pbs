@@ -153,9 +153,9 @@ def update_project(config, task_presenter, results,
 @cli.command()
 @click.option('--tasks-file', help='File with tasks',
               default='project.tasks', type=click.File('r'))
-@click.option('--tasks-type', help='Tasks type: JSON|CSV|PO|PROPERTIES',
-              default=None, type=click.Choice(['json', 'csv', 'po',
-                                                 'properties']))
+@click.option('--tasks-type', help='Tasks type: JSON|CSV|XLSX|XLSM|XLTX|XLTM|PO|PROPERTIES',
+              default=None, type=click.Choice(['json', 'csv', 'xlsx', 'xlsm',
+                                               'xltx', 'xltm', 'po', 'properties']))
 @click.option('--priority', help="Priority for the tasks.", default=0)
 @click.option('--redundancy', help="Redundancy for tasks.", default=30)
 @pass_config

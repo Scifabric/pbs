@@ -130,6 +130,7 @@ options, please check the **--help** command:
 Adding tasks is very simple. You can have your tasks in three formats:
 
  * JSON
+ * Excel (xlsx from 2010. It imports the first sheet)
  * CSV
  * PO (any po file that you want to translate)
  * PROPERTIES (any PROPERTIES file that you want to translate)
