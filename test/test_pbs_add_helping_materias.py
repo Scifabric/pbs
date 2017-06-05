@@ -31,26 +31,26 @@ class TestPbsAddHelpingMaterial(TestDefault):
         res = _add_helpingmaterials(self.config, helpingmaterials, 'json')
         assert res == '1 helping materials added to project: short_name', res
 
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_json_from_filextension(self, find_mock):
-    #    """Test add_tasks json without specifying file extension works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
+    @patch('helpers.find_project_by_short_name')
+    def test_add_helping_materials_json_from_filextension(self, find_mock):
+        """Test add_helpingmaterials json without specifying file extension works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
 
-    #    find_mock.return_value = project
+        find_mock.return_value = project
 
-    #    tasks = MagicMock()
-    #    tasks.name = 'tasks.json'
-    #    tasks.read.return_value = json.dumps([{'info': {'key': 'value'}}])
+        helpingmaterials = MagicMock()
+        helpingmaterials.name = 'helpingmaterials.json'
+        helpingmaterials.read.return_value = json.dumps([{'info': {'key': 'value'}}])
 
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.return_value = {'id': 1, 'info': {'key': 'value'}}
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, None, 0, 30)
-    #    assert res == '1 tasks added to project: short_name', res
+        pbclient = MagicMock()
+        pbclient.create_task.return_value = {'id': 1, 'info': {'key': 'value'}}
+        self.config.pbclient = pbclient
+        res = _add_helpingmaterials(self.config, helpingmaterials, None)
+        assert res == '1 helping materials added to project: short_name', res
 
     #@patch('helpers.find_project_by_short_name')
     #def test_add_tasks_csv_with_info(self, find_mock):
