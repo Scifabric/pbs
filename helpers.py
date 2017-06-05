@@ -32,11 +32,14 @@ import time
 import click
 from StringIO import StringIO
 import polib
+import openpyxl
+import itertools
 from requests import exceptions
 from pbsexceptions import ProjectNotFound, TaskNotFound
 import logging
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
+
 
 __all__ = ['find_project_by_short_name', 'check_api_error',
            'format_error', 'format_json_task', '_create_project',
@@ -151,6 +154,24 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
             reader = csv.DictReader(csv_data, delimiter=',')
             for line in reader:
                 data.append(line)
+        elif tasks_type in ['xlsx', 'xlsm', 'xltx', 'xltm']:
+            excel_data = StringIO(tasks)
+            wb = openpyxl.load_workbook(excel_data)
+            ws = wb.active
+            # First headers
+            headers = []
+            for row in ws.iter_rows(max_row=1):
+                for cell in row:
+                    tmp = '_'.join(cell.value.split(" ")).lower()
+                    headers.append(tmp)
+            # Simulate DictReader
+            for row in ws.iter_rows(row_offset=1):
+                values = []
+                for cell in row:
+                    values.append(cell.value)
+                tmp = dict(itertools.izip(headers, values))
+                if len(values) == len(headers) and not row_empty(values):
+                    data.append(tmp)
         # PO type
         elif tasks_type == 'po':
             po = polib.pofile(tasks)
@@ -327,6 +348,14 @@ def format_json_task(task_info):
         return json.loads(task_info)
     except:
         return task_info
+
+
+def row_empty(row):
+    """Check if all values in row are None."""
+    for value in row:
+        if value is not None:
+            return False
+    return True
 
 
 class PbsHandler(PatternMatchingEventHandler):
