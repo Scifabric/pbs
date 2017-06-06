@@ -290,3 +290,47 @@ class TestPbsAddHelpingMaterial(TestDefault):
         assert helping_info == dict(foo=1)
         assert file_path == 'file'
 
+    @patch('helpers.openpyxl.load_workbook')
+    @patch('helpers.find_project_by_short_name')
+    def test_add_helping_materials_excel_with_file(self, find_mock, workbook_mock):
+        """Test add_helpingmaterials excel with file_path field works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
+        project.id = 1
+
+        wb = Workbook()
+        ws = wb.active
+
+        headers = ['Column Name', 'foo', 'file Path']
+        ws.append(headers)
+        for row in range(2, 10):
+            ws.append(['value', 'bar', '/tmp/file.jpg'])
+
+        ws.append([None, None, None])
+        ws.append([None, None, None])
+
+        find_mock.return_value = project
+
+        helpingmaterials = MagicMock()
+        helpingmaterials.read.return_value = wb
+
+        workbook_mock.return_value = wb
+
+        pbclient = MagicMock()
+        hm = MagicMock()
+        hm.info = {'column_name': 'value', 'foo': 'bar'}
+        hm.id = 1
+        pbclient.create_helpingmaterial.return_value = hm
+        self.config.pbclient = pbclient
+        res = _add_helpingmaterials(self.config, helpingmaterials, 'xlsx')
+        self.config.pbclient.create_helpingmaterial.assert_called_with(project_id=find_mock().id,
+                                                                       file_path='/tmp/file.jpg',
+                                                                       info={u'column_name': u'value',
+                                                                             u'foo': u'bar'})
+        self.config.pbclient.update_helping_material.assert_called_with(hm)
+
+        assert res == '8 helping materials added to project: short_name', res
+
