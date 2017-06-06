@@ -47,69 +47,67 @@ class TestPbsAddHelpingMaterial(TestDefault):
         helpingmaterials.read.return_value = json.dumps([{'info': {'key': 'value'}}])
 
         pbclient = MagicMock()
-        pbclient.create_task.return_value = {'id': 1, 'info': {'key': 'value'}}
+        pbclient.create_helping_material.return_value = {'id': 1, 'info': {'key': 'value'}}
         self.config.pbclient = pbclient
         res = _add_helpingmaterials(self.config, helpingmaterials, None)
         assert res == '1 helping materials added to project: short_name', res
 
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_csv_with_info(self, find_mock):
-    #    """Test add_tasks csv with info field works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
+    @patch('helpers.find_project_by_short_name')
+    def test_add_helping_materials_csv_with_info(self, find_mock):
+        """Test add_helpingmaterials csv with info field works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
 
-    #    find_mock.return_value = project
+        find_mock.return_value = project
 
-    #    tasks = MagicMock()
-    #    tasks.read.return_value = "info, value\n, %s, 2" % json.dumps({'key':'value'})
+        helpingmaterials = MagicMock()
+        helpingmaterials.read.return_value = "info, value\n, %s, 2" % json.dumps({'key':'value'})
 
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.return_value = {'id': 1, 'info': {'key': 'value'}}
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, 'csv', 0, 30)
-    #    assert res == '1 tasks added to project: short_name', res
+        pbclient = MagicMock()
+        pbclient.create_helping_material.return_value = {'id': 1, 'info': {'key': 'value'}}
+        self.config.pbclient = pbclient
+        res = _add_helpingmaterials(self.config, helpingmaterials, 'csv')
+        assert res == '1 helping materials added to project: short_name', res
 
-    #@patch('helpers.openpyxl.load_workbook')
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_excel_with_info(self, find_mock, workbook_mock):
-    #    """Test add_tasks excel with info field works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
-    #    project.id = 1
+    @patch('helpers.openpyxl.load_workbook')
+    @patch('helpers.find_project_by_short_name')
+    def test_add_helping_materials_excel_with_info(self, find_mock, workbook_mock):
+        """Test add_helpingmaterials excel with info field works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
+        project.id = 1
 
-    #    wb = Workbook()
-    #    ws = wb.active
+        wb = Workbook()
+        ws = wb.active
 
-    #    headers = ['Column Name', 'foo']
-    #    ws.append(headers)
-    #    for row in range(2, 10):
-    #        ws.append(['value', 'bar'])
+        headers = ['Column Name', 'foo']
+        ws.append(headers)
+        for row in range(2, 10):
+            ws.append(['value', 'bar'])
 
-    #    ws.append([None, None])
-    #    ws.append([None, None])
+        ws.append([None, None])
+        ws.append([None, None])
 
-    #    find_mock.return_value = project
+        find_mock.return_value = project
 
-    #    tasks = MagicMock()
-    #    tasks.read.return_value = wb
+        helpingmaterials = MagicMock()
+        helpingmaterials.read.return_value = wb
 
-    #    workbook_mock.return_value = wb
+        workbook_mock.return_value = wb
 
-    #    pbclient = MagicMock()
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, 'xlsx', 0, 30)
-    #    self.config.pbclient.create_task.assert_called_with(project_id=find_mock().id,
-    #                                                        info={u'column_name': u'value',
-    #                                                              u'foo': u'bar'},
-    #                                                        n_answers=30,
-    #                                                        priority_0=0)
-    #    assert res == '8 tasks added to project: short_name', res
+        pbclient = MagicMock()
+        self.config.pbclient = pbclient
+        res = _add_helpingmaterials(self.config, helpingmaterials, 'xlsx')
+        self.config.pbclient.create_helping_material.assert_called_with(project_id=find_mock().id,
+                                                                        info={u'column_name': u'value',
+                                                                              u'foo': u'bar'})
+        assert res == '8 helping materials added to project: short_name', res
 
     #@patch('helpers.find_project_by_short_name')
     #def test_add_tasks_csv_from_filextension(self, find_mock):
