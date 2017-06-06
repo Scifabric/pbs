@@ -48,7 +48,7 @@ __all__ = ['find_project_by_short_name', 'check_api_error',
            '_update_tasks_redundancy',
            '_update_project_watch', 'PbsHandler',
            '_update_task_presenter_bundle_js', 'row_empty',
-           '_add_helpingmaterials']
+           '_add_helpingmaterials', 'create_helping_material_info']
 
 
 def _create_project(config):
