@@ -47,7 +47,8 @@ __all__ = ['find_project_by_short_name', 'check_api_error',
            '_delete_tasks', 'enable_auto_throttling',
            '_update_tasks_redundancy',
            '_update_project_watch', 'PbsHandler',
-           '_update_task_presenter_bundle_js', 'row_empty']
+           '_update_task_presenter_bundle_js', 'row_empty',
+           '_add_helpingmaterials', 'create_helping_material_info']
 
 
 def _create_project(config):
@@ -225,6 +226,53 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         raise
 
 
+def _add_helpingmaterials(config, helping_file, helping_type):
+    """Add helping materials to a project."""
+    try:
+        project = find_project_by_short_name(config.project['short_name'],
+                                             config.pbclient,
+                                             config.all)
+        data = _load_data(helping_file, helping_type)
+        if len(data) == 0:
+            return ("Unknown format for the tasks file. Use json, csv, po or "
+                    "properties.")
+        # Check if for the data we have to auto-throttle task creation
+        sleep, msg = enable_auto_throttling(data)
+        # If true, warn user
+        if sleep:  # pragma: no cover
+            click.secho(msg, fg='yellow')
+        # Show progress bar
+        with click.progressbar(data, label="Adding Helping Materials") as pgbar:
+            for d in pgbar:
+                helping_info, file_path = create_helping_material_info(d)
+                if file_path:
+                    # Create first the media object
+                    hm = config.pbclient.create_helpingmaterial(project_id=project.id,
+                                                                info=helping_info,
+                                                                file_path=file_path)
+                    check_api_error(hm)
+
+                    z = hm.info.copy()
+                    z.update(helping_info)
+                    hm.info = z
+                    response = config.pbclient.update_helping_material(hm)
+                    check_api_error(response)
+                else:
+                    response = config.pbclient.create_helping_material(project_id=project.id,
+                                                                       info=helping_info)
+                check_api_error(response)
+                # If auto-throttling enabled, sleep for 3 seconds
+                if sleep:  # pragma: no cover
+                    time.sleep(3)
+            return ("%s helping materials added to project: %s" % (len(data),
+                    config.project['short_name']))
+    except exceptions.ConnectionError:
+        return ("Connection Error! The server %s is not responding" % config.server)
+    except (ProjectNotFound, TaskNotFound):
+        raise
+
+
+
 def _delete_tasks(config, task_id, limit=100, offset=0):
     """Delete tasks from a project."""
     try:
@@ -342,6 +390,20 @@ def create_task_info(task):
     else:
         task_info = task
     return task_info
+
+
+def create_helping_material_info(helping):
+    """Create helping_material_info field."""
+    helping_info = None
+    file_path = None
+    if helping.get('info'):
+        helping_info = helping['info']
+    else:
+        helping_info = helping
+    if helping_info.get('file_path'):
+        file_path = helping_info.get('file_path')
+        del helping_info['file_path']
+    return helping_info, file_path
 
 
 def enable_auto_throttling(data, limit=299):

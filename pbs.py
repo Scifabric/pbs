@@ -164,6 +164,20 @@ def add_tasks(config, tasks_file, tasks_type, priority, redundancy):
     res = _add_tasks(config, tasks_file, tasks_type, priority, redundancy)
     click.echo(res)
 
+
+@cli.command()
+@click.option('--helping-materials-file', help='File with helping materials',
+              default='helping.materials', type=click.File('r'))
+@click.option('--helping-type', help='Tasks type: JSON|CSV|XLSX|XLSM|XLTX|XLTM',
+              default=None, type=click.Choice(['json', 'csv', 'xlsx', 'xlsm',
+                                               'xltx', 'xltm']))
+@pass_config
+def add_helpingmaterials(config, helping_materials_file, helping_type):
+    """Add helping materials to a project."""
+    res = _add_helpingmaterials(config, helping_materials_file, helping_type)
+    click.echo(res)
+
+
 @cli.command()
 @click.option('--task-id', help='Task ID to delete from project', default=None)
 @pass_config
