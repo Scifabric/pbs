@@ -130,254 +130,145 @@ class TestPbsAddHelpingMaterial(TestDefault):
         res = _add_helpingmaterials(self.config, helpingmaterials, None)
         assert res == '1 helping materials added to project: short_name', res
 
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_json_without_info(self, find_mock):
-    #    """Test add_tasks json without info field works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
+    @patch('helpers.find_project_by_short_name')
+    def test_add_helping_materials_json_without_info(self, find_mock):
+        """Test add_heping_materials json without info field works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
 
-    #    find_mock.return_value = project
+        find_mock.return_value = project
 
-    #    tasks = MagicMock()
-    #    tasks.read.return_value = json.dumps([{'key': 'value'}])
+        helpingmaterials = MagicMock()
+        helpingmaterials.read.return_value = json.dumps([{'key': 'value'}])
 
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.return_value = {'id': 1, 'info': {'key': 'value'}}
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, 'json', 0, 30)
-    #    assert res == '1 tasks added to project: short_name', res
+        pbclient = MagicMock()
+        pbclient.create_helping_material.return_value = {'id': 1, 'info': {'key': 'value'}}
+        self.config.pbclient = pbclient
+        res = _add_helpingmaterials(self.config, helpingmaterials, 'json')
+        assert res == '1 helping materials added to project: short_name', res
 
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_csv_without_info(self, find_mock):
-    #    """Test add_tasks csv without info field works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
+    @patch('helpers.find_project_by_short_name')
+    def test_add_helping_materials_csv_without_info(self, find_mock):
+        """Test add_helpingmaterials csv without info field works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
 
-    #    find_mock.return_value = project
+        find_mock.return_value = project
 
-    #    tasks = MagicMock()
-    #    tasks.read.return_value = "key, value\n, 1, 2"
+        helpingmaterials = MagicMock()
+        helpingmaterials.read.return_value = "key, value\n, 1, 2"
 
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.return_value = {'id': 1, 'info': {'key': 'value'}}
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, 'csv', 0, 30)
-    #    assert res == '1 tasks added to project: short_name', res
+        pbclient = MagicMock()
+        pbclient.create_helping_material.return_value = {'id': 1, 'info': {'key': 'value'}}
+        self.config.pbclient = pbclient
+        res = _add_helpingmaterials(self.config, helpingmaterials, 'csv')
+        assert res == '1 helping materials added to project: short_name', res
 
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_unknow_type_from_filextension(self, find_mock):
-    #    """Test add_tasks with unknown type from file extension works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
+    @patch('helpers.find_project_by_short_name')
+    def test_add_helping_materials_unknow_type_from_filextension(self, find_mock):
+        """Test add_helpingmaterials with unknown type from file extension works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
 
-    #    find_mock.return_value = project
+        find_mock.return_value = project
 
-    #    tasks = MagicMock()
-    #    tasks.name = 'tasks.doc'
-    #    tasks.read.return_value = "key, value\n, 1, 2"
+        helpingmaterials = MagicMock()
+        helpingmaterials.name = 'helping.doc'
+        helpingmaterials.read.return_value = "key, value\n, 1, 2"
 
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.return_value = {'id': 1, 'info': {'key': 'value'}}
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, None, 0, 30)
-    #    assert res == ("Unknown format for the tasks file. Use json, csv, po or "
-    #                  "properties."), res
+        pbclient = MagicMock()
+        pbclient.create_helping_material.return_value = {'id': 1, 'info': {'key': 'value'}}
+        self.config.pbclient = pbclient
+        res = _add_helpingmaterials(self.config, helpingmaterials, None)
+        assert res == ("Unknown format for the tasks file. Use json, csv, po or "
+                      "properties."), res
 
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_unknow_type(self, find_mock):
-    #    """Test add_tasks with unknown type works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
+    @patch('helpers.find_project_by_short_name')
+    def test_add_helping_materials_unknow_type(self, find_mock):
+        """Test add_helpingmaterials with unknown type works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
 
-    #    find_mock.return_value = project
+        find_mock.return_value = project
 
-    #    tasks = MagicMock()
-    #    tasks.read.return_value = "key, value\n, 1, 2"
+        helpingmaterials = MagicMock()
+        helpingmaterials.read.return_value = "key, value\n, 1, 2"
 
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.return_value = {'id': 1, 'info': {'key': 'value'}}
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, 'doc', 0, 30)
-    #    assert res == ("Unknown format for the tasks file. Use json, csv, po or "
-    #                  "properties."), res
+        pbclient = MagicMock()
+        pbclient.create_helping_material.return_value = {'id': 1, 'info': {'key': 'value'}}
+        self.config.pbclient = pbclient
+        res = _add_helpingmaterials(self.config, helpingmaterials, 'doc')
+        assert res == ("Unknown format for the tasks file. Use json, csv, po or "
+                      "properties."), res
 
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_csv_connection_error(self, find_mock):
-    #    """Test add_tasks csv connection error works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
+    @patch('helpers.find_project_by_short_name')
+    def test_add_helping_materials_csv_connection_error(self, find_mock):
+        """Test add_helpingmaterials csv connection error works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
 
-    #    find_mock.return_value = project
+        find_mock.return_value = project
 
-    #    tasks = MagicMock()
-    #    tasks.read.return_value = "key, value\n, 1, 2"
+        helpingmaterials = MagicMock()
+        helpingmaterials.read.return_value = "key, value\n, 1, 2"
 
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.side_effect = exceptions.ConnectionError
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, 'csv', 0, 30)
-    #    assert res == "Connection Error! The server http://server is not responding", res
+        pbclient = MagicMock()
+        pbclient.create_helping_material.side_effect = exceptions.ConnectionError
+        self.config.pbclient = pbclient
+        res = _add_helpingmaterials(self.config, helpingmaterials, 'csv')
+        assert res == "Connection Error! The server http://server is not responding", res
 
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_json_connection_error(self, find_mock):
-    #    """Test add_tasks json connection error works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
+    @patch('helpers.find_project_by_short_name')
+    def test_add_helping_material_json_connection_error(self, find_mock):
+        """Test add_helpingmaterials json connection error works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
 
-    #    find_mock.return_value = project
+        find_mock.return_value = project
 
-    #    tasks = MagicMock()
-    #    tasks.read.return_value = json.dumps([{'key': 'value'}])
+        tasks = MagicMock()
+        tasks.read.return_value = json.dumps([{'key': 'value'}])
 
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.side_effect = exceptions.ConnectionError
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, 'json', 0, 30)
-    #    assert res == "Connection Error! The server http://server is not responding", res
+        pbclient = MagicMock()
+        pbclient.create_helping_material.side_effect = exceptions.ConnectionError
+        self.config.pbclient = pbclient
+        res = _add_helpingmaterials(self.config, tasks, 'json')
+        assert res == "Connection Error! The server http://server is not responding", res
 
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_another_error(self, find_mock):
-    #    """Test add_tasks another error works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
+    @patch('helpers.find_project_by_short_name')
+    def test_add_helpingmaterial_another_error(self, find_mock):
+        """Test add_tasks another error works."""
+        project = MagicMock()
+        project.name = 'name'
+        project.short_name = 'short_name'
+        project.description = 'description'
+        project.info = dict()
 
-    #    find_mock.return_value = project
+        find_mock.return_value = project
 
-    #    tasks = MagicMock()
-    #    tasks.read.return_value = json.dumps([{'key': 'value'}])
+        tasks = MagicMock()
+        tasks.read.return_value = json.dumps([{'key': 'value'}])
 
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.return_value = self.error
-    #    self.config.pbclient = pbclient
-    #    assert_raises(ProjectNotFound, _add_tasks, self.config,
-    #                  tasks, 'json', 0, 30)
-
-    #@patch('polib.pofile')
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_po_with_info(self, find_mock, po_mock):
-    #    """Test add_tasks po with info field works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
-    #    find_mock.return_value = project
-
-    #    entry = MagicMock()
-    #    entry.msgid = 'English'
-    #    entry.msgtr = ''
-    #    po = MagicMock()
-    #    po.untranslated_entries.return_value = [entry]
-    #    po_mock.return_value = po
-
-    #    tasks = MagicMock()
-    #    tasks.read.return_value = json.dumps([{'info': {'msgid': 'English',
-    #                                                    'msgtr':''}}])
-
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.return_value = {'id': 1, 'info': {'msgid': 'English',
-    #                                                           'msgtr': ''}}
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, 'po', 0, 30)
-    #    assert res == '1 tasks added to project: short_name', res
-
-    #@patch('polib.pofile')
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_po_from_filextension(self, find_mock, po_mock):
-    #    """Test add_tasks po without specifying file extension works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
-    #    find_mock.return_value = project
-
-    #    entry = MagicMock()
-    #    entry.msgid = 'English'
-    #    entry.msgtr = ''
-    #    po = MagicMock()
-    #    po.untranslated_entries.return_value = [entry]
-    #    po_mock.return_value = po
-
-    #    tasks = MagicMock()
-    #    tasks.name = 'tasks.po'
-    #    tasks.read.return_value = json.dumps([{'info': {'msgid': 'English',
-    #                                                    'msgtr':''}}])
-
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.return_value = {'id': 1, 'info': {'msgid': 'English',
-    #                                                           'msgtr': ''}}
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, None, 0, 30)
-    #    assert res == '1 tasks added to project: short_name', res
-
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_properties_with_info(self, find_mock):
-    #    """Test add_tasks properties with info field works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
-    #    find_mock.return_value = project
-
-    #    tasks = MagicMock()
-    #    tasks.read.return_value = "foo_id= foo\n"
-
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.return_value = {'id': 1, 'info': {'var_id': 'foo_id',
-    #                                                           'string': ' foo'}}
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, 'properties', 0, 30)
-    #    assert res == '1 tasks added to project: short_name', res
-
-    #@patch('helpers.find_project_by_short_name')
-    #def test_add_tasks_properties_from_filextension(self, find_mock):
-    #    """Test add_tasks properties without specifying file extension works."""
-    #    project = MagicMock()
-    #    project.name = 'name'
-    #    project.short_name = 'short_name'
-    #    project.description = 'description'
-    #    project.info = dict()
-    #    find_mock.return_value = project
-
-    #    tasks = MagicMock()
-    #    tasks.name = 'tasks.properties'
-    #    tasks.read.return_value = "foo_id= foo\n"
-
-    #    pbclient = MagicMock()
-    #    pbclient.create_task.return_value = {'id': 1, 'info': {'var_id': 'foo_id',
-    #                                                           'string': ' foo'}}
-    #    self.config.pbclient = pbclient
-    #    res = _add_tasks(self.config, tasks, None, 0, 30)
-    #    assert res == '1 tasks added to project: short_name', res
-
-    #def test_empty_row(self):
-    #    """Test that empty_row method detects it properly."""
-    #    empty = [None, None, None, None]
-    #    assert row_empty(empty) is True
-    #    empty = [None, None, None, 'foo']
-    #    assert row_empty(empty) is False
-    #    empty = [None, 'foo', None, 'foo']
-    #    assert row_empty(empty) is False
+        pbclient = MagicMock()
+        pbclient.create_helping_material.return_value = self.error
+        self.config.pbclient = pbclient
+        assert_raises(ProjectNotFound, _add_helpingmaterials, self.config,
+                      tasks, 'json')
