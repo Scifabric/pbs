@@ -15,7 +15,7 @@ progress bar, delete them and update the project templates
 Requirements
 ============
 
-[PYBOSSA server](http://pybossa.com) >= 1.2.0.
+[PYBOSSA server](http://pybossa.com) >= 2.3.7.
 
 Installation
 ============
@@ -33,7 +33,7 @@ If you want to hack on the code, just install it but with the **--editable**
 flag after cloning the repository:
 
 ```
-    git clone https://github.com/PyBossa/pbs.git
+    git clone https://github.com/Scifabric/pbs.git
     cd pbs
     virtualenv env
     source env/bin/activate
@@ -268,6 +268,41 @@ options, please check the **--help** command:
     pbs delete_tasks --help
 ```
 
+## Adding helping materials to a project
+
+Adding helping materials is very simple. You can have your materials in three formats:
+
+ * JSON
+ * Excel (xlsx from 2010. It imports the first sheet)
+ * CSV
+
+Therefore, adding helping materials to your project is as simple as this command:
+
+```bash
+    pbs add_helpingmaterials
+    --helping-materials-lfile file.xlsx --helping-type xlsx
+```
+
+If you want to see all the available
+options, please check the **--help** command:
+
+**NOTE**: By default PYBOSSA servers use a rate limit for avoiding abuse of the
+API. For this reason, you can only do usually 300 requests per every 15
+minutes. If you are going to add more than 300 tasks, pbs will detect it and
+warn you, auto-enabling the throttling for you to respect the limits.
+
+
+*NOTE*: PYBOSSA helping materials allows you to upload media files like videos,
+images, or sounds to support your project tutorials. The command line pbs will check
+for a column in your file with the name *file_path* so it can upload it first into 
+the server. Please, be sure that the file (or files) path is reachable from the
+helping materials file.
+
+```bash
+    pbs add_helpingmaterials --help
+```
+
+
 # Documentation
 
 You have more documentation, with real examples at
@@ -279,6 +314,6 @@ in the site.
 
 # Copyright / License
 
-Copyright (C) 2015 [SciFabric LTD](http://scifabric.com).
+Copyright (C) 2017 [Scifabric LTD](http://scifabric.com).
 
 License: see LICENSE file.
