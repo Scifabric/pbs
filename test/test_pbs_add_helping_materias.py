@@ -272,3 +272,21 @@ class TestPbsAddHelpingMaterial(TestDefault):
         self.config.pbclient = pbclient
         assert_raises(ProjectNotFound, _add_helpingmaterials, self.config,
                       tasks, 'json')
+
+    def test_create_helping_material_info(self):
+        """Test create_helping_material_info method works."""
+        data = dict(info=dict(foo=1))
+        helping_info, file_path = create_helping_material_info(data)
+        assert helping_info == dict(foo=1)
+        assert file_path is None
+
+        data = dict(foo=1)
+        helping_info, file_path = create_helping_material_info(data)
+        assert helping_info == dict(foo=1)
+        assert file_path is None
+
+        data = dict(foo=1, file_path='file')
+        helping_info, file_path = create_helping_material_info(data)
+        assert helping_info == dict(foo=1)
+        assert file_path == 'file'
+
