@@ -29,7 +29,7 @@ setup(
                    'Operating System :: OS Independent',
                    'Programming Language :: Python',],
     py_modules=['pbs', 'helpers', 'pbsexceptions'],
-    install_requires=['Click>=2.3, <2.4', 'pybossa-client>=1.2.0, <1.2.1', 'requests', 'nose', 'mock', 'coverage',
+    install_requires=['Click>=2.3, <2.4', 'pybossa-client>=1.2.1, <1.2.2', 'requests', 'nose', 'mock', 'coverage',
                       'rednose', 'pypandoc', 'simplejson', 'jsonschema', 'polib', 'watchdog', 'openpyxl'],
     entry_points='''
         [console_scripts]
