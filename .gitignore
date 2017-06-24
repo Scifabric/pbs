@@ -8,3 +8,5 @@ env
 build/
 dist/
 pbs.egg-info/
+pybossa_pbs.egg-info/
+
