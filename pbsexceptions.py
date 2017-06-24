@@ -48,3 +48,16 @@ class TaskNotFound(PbsException):
 
         self.message = message
         self.error = error
+
+
+class DatabaseError(PbsException):
+
+    """DatabaseError exception."""
+
+    def __init__(self, message, error):
+        """Init method."""
+        # Call the base class constructor with the parameters it needs
+        super(DatabaseError, self).__init__(message)
+
+        self.error = error
+        self.message = "PyBossa database error."
