@@ -9,7 +9,7 @@ try:
 except IOError:
     print("warning: README.md not found")
     long_description = ""
-except ImportError:
+except (ImportError, OSError):
     print("warning: pypandoc module not found, could not convert Markdown to RST")
     long_description = ""
 
@@ -36,3 +36,4 @@ setup(
         pbs=pbs:cli
     '''
 )
+
