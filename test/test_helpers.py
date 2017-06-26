@@ -59,6 +59,12 @@ class TestHelpers(TestDefault):
                      exception_cls='ProgrammingError')
         assert_raises(DatabaseError, check_api_error, error)
 
+    def test_check_api_error_raises_database_error(self):
+        """Test check_api_error raises ProjectAlreadyExists exception."""
+        error = dict(status='failed', target='project',
+                     exception_cls='DBIntegrityError')
+        assert_raises(ProjectAlreadyExists, check_api_error, error)
+
     def test_check_api_error_returns_none(self):
         """Test check_api_error returns none."""
         error = self.error

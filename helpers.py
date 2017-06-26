@@ -35,7 +35,7 @@ import polib
 import openpyxl
 import itertools
 from requests import exceptions
-from pbsexceptions import ProjectNotFound, TaskNotFound, DatabaseError
+from pbsexceptions import *
 import logging
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
@@ -366,6 +366,10 @@ def check_api_error(api_response):
         if 'ProgrammingError' in api_response.get('exception_cls'):
             raise DatabaseError(message='PyBossa database error.',
                                 error=api_response)
+        if ('DBIntegrityError' in api_response.get('exception_cls') and
+            'project' in api_response.get('target')):
+            msg = 'PyBossa project already exists.'
+            raise ProjectAlreadyExists(message=msg, error=api_response)
         if 'project' in api_response.get('target'):
             raise ProjectNotFound(message='PyBossa Project not found',
                                   error=api_response)
