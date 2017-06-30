@@ -104,9 +104,9 @@ class TestPbsAddHelpingMaterial(TestDefault):
         pbclient = MagicMock()
         self.config.pbclient = pbclient
         res = _add_helpingmaterials(self.config, helpingmaterials, 'xlsx')
-        self.config.pbclient.create_helping_material.assert_called_with(project_id=find_mock().id,
-                                                                        info={u'column_name': u'value',
-                                                                              u'foo': u'bar'})
+        self.config.pbclient.create_helpingmaterial.assert_called_with(project_id=find_mock().id,
+                                                                       info={u'column_name': u'value',
+                                                                             u'foo': u'bar'})
         assert res == '8 helping materials added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
@@ -228,7 +228,7 @@ class TestPbsAddHelpingMaterial(TestDefault):
         helpingmaterials.read.return_value = "key, value\n, 1, 2"
 
         pbclient = MagicMock()
-        pbclient.create_helping_material.side_effect = exceptions.ConnectionError
+        pbclient.create_helpingmaterial.side_effect = exceptions.ConnectionError
         self.config.pbclient = pbclient
         res = _add_helpingmaterials(self.config, helpingmaterials, 'csv')
         assert res == "Connection Error! The server http://server is not responding", res
@@ -248,7 +248,7 @@ class TestPbsAddHelpingMaterial(TestDefault):
         tasks.read.return_value = json.dumps([{'key': 'value'}])
 
         pbclient = MagicMock()
-        pbclient.create_helping_material.side_effect = exceptions.ConnectionError
+        pbclient.create_helpingmaterial.side_effect = exceptions.ConnectionError
         self.config.pbclient = pbclient
         res = _add_helpingmaterials(self.config, tasks, 'json')
         assert res == "Connection Error! The server http://server is not responding", res
@@ -268,7 +268,7 @@ class TestPbsAddHelpingMaterial(TestDefault):
         tasks.read.return_value = json.dumps([{'key': 'value'}])
 
         pbclient = MagicMock()
-        pbclient.create_helping_material.return_value = self.error
+        pbclient.create_helpingmaterial.return_value = self.error
         self.config.pbclient = pbclient
         assert_raises(ProjectNotFound, _add_helpingmaterials, self.config,
                       tasks, 'json')
