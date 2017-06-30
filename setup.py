@@ -9,13 +9,13 @@ try:
 except IOError:
     print("warning: README.md not found")
     long_description = ""
-except ImportError:
+except (ImportError, OSError):
     print("warning: pypandoc module not found, could not convert Markdown to RST")
     long_description = ""
 
 setup(
     name="pybossa-pbs",
-    version="2.4.3",
+    version="2.4.4",
     author="Scifabric LTD",
     author_email="info@scifabric.com",
     description="PYBOSSA command line client",

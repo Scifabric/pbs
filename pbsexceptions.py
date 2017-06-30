@@ -37,6 +37,19 @@ class ProjectNotFound(PbsException):
         self.message = "PyBossa project not found."
 
 
+class ProjectAlreadyExists(PbsException):
+
+    """ProjectAlreadyExists exception."""
+
+    def __init__(self, message, error):
+        """Init method."""
+        # Call the base class constructor with the parameters it needs
+        super(ProjectAlreadyExists, self).__init__(message)
+
+        self.error = error
+        self.message = "PyBossa project already exists."
+
+
 class TaskNotFound(PbsException):
 
     """TaskNotFound exception."""
@@ -48,3 +61,16 @@ class TaskNotFound(PbsException):
 
         self.message = message
         self.error = error
+
+
+class DatabaseError(PbsException):
+
+    """DatabaseError exception."""
+
+    def __init__(self, message, error):
+        """Init method."""
+        # Call the base class constructor with the parameters it needs
+        super(DatabaseError, self).__init__(message)
+
+        self.error = error
+        self.message = "PyBossa database error."

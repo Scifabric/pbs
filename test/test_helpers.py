@@ -50,8 +50,20 @@ class TestHelpers(TestDefault):
 
     def test_check_api_error_raises_exception(self):
         """Test check_api_error raises HTTPError exception."""
-        error = dict(status='failed', target='diff')
+        error = dict(status='failed', target='diff', exception_cls='err')
         assert_raises(exceptions.HTTPError, check_api_error, error)
+
+    def test_check_api_error_raises_database_error(self):
+        """Test check_api_error raises DatabaseError exception."""
+        error = dict(status='failed', target='diff',
+                     exception_cls='ProgrammingError')
+        assert_raises(DatabaseError, check_api_error, error)
+
+    def test_check_api_error_raises_database_error(self):
+        """Test check_api_error raises ProjectAlreadyExists exception."""
+        error = dict(status='failed', target='project',
+                     exception_cls='DBIntegrityError')
+        assert_raises(ProjectAlreadyExists, check_api_error, error)
 
     def test_check_api_error_returns_none(self):
         """Test check_api_error returns none."""
