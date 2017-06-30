@@ -258,8 +258,8 @@ def _add_helpingmaterials(config, helping_file, helping_type):
                     response = config.pbclient.update_helping_material(hm)
                     check_api_error(response)
                 else:
-                    response = config.pbclient.create_helping_material(project_id=project.id,
-                                                                       info=helping_info)
+                    response = config.pbclient.create_helpingmaterial(project_id=project.id,
+                                                                      info=helping_info)
                 check_api_error(response)
                 # If auto-throttling enabled, sleep for 3 seconds
                 if sleep:  # pragma: no cover
