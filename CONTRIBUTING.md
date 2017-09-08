@@ -2,12 +2,12 @@
 
 ## Before You Start
 
-Anyone wishing to contribute to the **[PyBossa/pbs](https://github.com/PyBossa/pbs)** project 
+Anyone wishing to contribute to the **[Scifabric/pbs](https://github.com/Scifabric/pbs)** project 
 **MUST read & sign a Contributor Assignment Agreement (CAA)**. 
 
-The PyBossa team is legally prevented from accepting any pull requests from users who have not signed the CAA first.
+The Scifabric team is legally prevented from accepting any pull requests from users who have not signed the CAA first.
 
-If you have any doubts about the CAA, please, contact us at <info AT pybossa DOT com>.
+If you have any doubts about the CAA, please, contact us at *info AT scifabric.com*.
 
 ## Instructions
 
@@ -26,13 +26,14 @@ Once we have received your consent, we will send you back the agreement via e-ma
 
 If you have any doubts, do not hesitate and contact us here: *info AT scifabric.com*. We will be happy to answer all your questions.
 
-If You do not own the Copyright in the entire work of authorship
+## If You do not own the Copyright in the entire work of authorship
+
 If this is your case, you will need to contact all the other authors, and get their signed permission in order to contribute to the project.
 
 ## Download Instructions
 
-If you are an **Individual** download this [form](https://dl.dropboxusercontent.com/u/27667029/PyBossaIndividualContributorAssignmentAgreement.pdf).
+If you are an **Individual** download this [form](https://drive.google.com/file/d/0B-wKsWbAUup4Y0pLOGY1Sl9UMTQ/view?usp=sharing).
 
-If you are an **Entity** download this [form](https://dl.dropboxusercontent.com/u/27667029/PyBossaEntityContributorAssignmentAgreement.pdf).
+If you are an **Entity** download this [form](https://drive.google.com/file/d/0B-wKsWbAUup4YWRxakNXVV9BYmc/view?usp=sharing).
 
 Please print, sign and scan it and send it as an attachment in an email to  to *info AT scifabric.com* Once we have received your copy, we will send you back a signed copy from us, and from that moment you will be able to start contributing to the project normally. Welcome to the community!
