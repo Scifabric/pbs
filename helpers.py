@@ -362,7 +362,7 @@ def find_project_by_short_name(short_name, pbclient, all=None):
 
 def check_api_error(api_response):
     """Check if returned API response contains an error."""
-    if 'status' not in api_response:
+    if type(api_response) == dict and 'status' not in api_response:
         msg = "Unable to find 'status' in server response; Misconfigured URL?"
         print(msg)
         print("Server response: %s" % api_response)
@@ -382,6 +382,7 @@ def check_api_error(api_response):
             raise TaskNotFound(message='PyBossa Task not found',
                                error=api_response)
         else:
+            print("Server response: %s" % api_response)
             raise exceptions.HTTPError
 
 
