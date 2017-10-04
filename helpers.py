@@ -361,29 +361,32 @@ def find_project_by_short_name(short_name, pbclient, all=None):
 
 
 def check_api_error(api_response):
-    """Check if returned API response contains an error."""
+    """Check if returned API response contains an error.
     if type(api_response) == dict and 'status' not in api_response:
+        if 'status_code' in api_response and api_response['status_code'] <> 200
         msg = "Unable to find 'status' in server response; Misconfigured URL?"
         print(msg)
         print("Server response: %s" % api_response)
-        raise Exception(msg)
-    if type(api_response) == dict and (api_response.get('status') == 'failed'):
-        if 'ProgrammingError' in api_response.get('exception_cls'):
-            raise DatabaseError(message='PyBossa database error.',
-                                error=api_response)
-        if ('DBIntegrityError' in api_response.get('exception_cls') and
-            'project' in api_response.get('target')):
-            msg = 'PyBossa project already exists.'
-            raise ProjectAlreadyExists(message=msg, error=api_response)
-        if 'project' in api_response.get('target'):
-            raise ProjectNotFound(message='PyBossa Project not found',
-                                  error=api_response)
-        if 'task' in api_response.get('target'):
-            raise TaskNotFound(message='PyBossa Task not found',
-                               error=api_response)
-        else:
-            print("Server response: %s" % api_response)
-            raise exceptions.HTTPError
+        raise Exception(msg)"""
+    if type(api_response) == dict and (api_response.get('status') == 'failed' or api_response.get('status_code') != 200 ):
+        if 'exception_cls' in api_response:
+            if 'ProgrammingError' in api_response.get('exception_cls'):
+                raise DatabaseError(message='PyBossa database error.',
+                                    error=api_response)
+            if ('DBIntegrityError' in api_response.get('exception_cls') and
+                'project' in api_response.get('target')):
+                msg = 'PyBossa project already exists.'
+                raise ProjectAlreadyExists(message=msg, error=api_response)
+
+        if 'target' in api_response:
+            if 'project' in api_response.get('target'):
+                raise ProjectNotFound(message='PyBossa Project not found',
+                                      error=api_response)
+            if 'task' in api_response.get('target'):
+                raise TaskNotFound(message='PyBossa Task not found',
+                                   error=api_response)
+        print("Server response: %s" % api_response)
+        raise exceptions.HTTPError
 
 
 def format_error(module, error):
