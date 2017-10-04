@@ -362,6 +362,11 @@ def find_project_by_short_name(short_name, pbclient, all=None):
 
 def check_api_error(api_response):
     """Check if returned API response contains an error."""
+    if 'status' not in api_response:
+        msg = "Unable to find 'status' in server response; Misconfigured URL?"
+        print(msg)
+        print("Server response: %s" % api_response)
+        raise Exception(msg)
     if type(api_response) == dict and (api_response.get('status') == 'failed'):
         if 'ProgrammingError' in api_response.get('exception_cls'):
             raise DatabaseError(message='PyBossa database error.',
