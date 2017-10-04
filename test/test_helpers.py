@@ -55,7 +55,7 @@ class TestHelpers(TestDefault):
 
     def test_check_general_http_api_error_raises_exception(self):
         """Test check_api_error raises HTTPError exception."""
-        error = dict(status_code=500)
+        error = dict(code=500)
         assert_raises(exceptions.HTTPError, check_api_error, error)
 
     def test_check_api_error_raises_database_error(self):
