@@ -58,11 +58,12 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
 @click.option('--server',  help='The PYBOSSA server')
 @click.option('--api-key', help='Your PYBOSSA API-KEY')
 @click.option('--all', help='Search across all projects')
+@click.option('--limit', type=int, default=0, help='Override server limit for tasks manipulation')
 @click.option('--credentials', help='Use your PYBOSSA credentials in .pybossa.cfg file',
               default="default")
 @click.option('--project', type=click.File('r'), default='project.json')
 @pass_config
-def cli(config, server, api_key, all, credentials, project):
+def cli(config, server, api_key, all, limit, credentials, project):
     """Create the cli command line."""
     # Check first for the pybossa.rc file to configure server and api-key
     home = expanduser("~")
@@ -74,12 +75,15 @@ def cli(config, server, api_key, all, credentials, project):
             config.all = config.parser.get(credentials, 'all')
         except ConfigParser.NoOptionError:
             config.all = None
+        config.limit = int(config.parser.items(credentials).get('limit', 0))
     if server:
         config.server = server
     if api_key:
         config.api_key = api_key
     if all:
         config.all = all
+    if limit:
+        config.limit = limit
     try:
         config.project = json.loads(project.read())
     except JSONDecodeError as e:

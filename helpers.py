@@ -35,6 +35,7 @@ import polib
 import openpyxl
 import itertools
 from requests import exceptions
+import requests
 from pbsexceptions import *
 import logging
 from watchdog.observers import Observer
@@ -202,7 +203,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
             return ("Unknown format for the tasks file. Use json, csv, po or "
                     "properties.")
         # Check if for the data we have to auto-throttle task creation
-        sleep, msg = enable_auto_throttling(data)
+        sleep, msg = enable_auto_throttling(config, data)
         # If true, warn user
         if sleep:  # pragma: no cover
             click.secho(msg, fg='yellow')
@@ -215,9 +216,9 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                        n_answers=redundancy,
                                                        priority_0=priority)
                 check_api_error(response)
-                # If auto-throttling enabled, sleep for 3 seconds
+                # If auto-throttling enabled, sleep for sleep seconds
                 if sleep:  # pragma: no cover
-                    time.sleep(3)
+                    time.sleep(sleep)
             return ("%s tasks added to project: %s" % (len(data),
                     config.project['short_name']))
     except exceptions.ConnectionError:
@@ -237,7 +238,7 @@ def _add_helpingmaterials(config, helping_file, helping_type):
             return ("Unknown format for the tasks file. Use json, csv, po or "
                     "properties.")
         # Check if for the data we have to auto-throttle task creation
-        sleep, msg = enable_auto_throttling(data)
+        sleep, msg = enable_auto_throttling(config, data)
         # If true, warn user
         if sleep:  # pragma: no cover
             click.secho(msg, fg='yellow')
@@ -261,9 +262,9 @@ def _add_helpingmaterials(config, helping_file, helping_type):
                     response = config.pbclient.create_helpingmaterial(project_id=project.id,
                                                                       info=helping_info)
                 check_api_error(response)
-                # If auto-throttling enabled, sleep for 3 seconds
+                # If auto-throttling enabled, sleep for sleep seconds
                 if sleep:  # pragma: no cover
-                    time.sleep(3)
+                    time.sleep(sleep)
             return ("%s helping materials added to project: %s" % (len(data),
                     config.project['short_name']))
     except exceptions.ConnectionError:
@@ -321,7 +322,7 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
             offset = offset
             tasks = config.pbclient.get_tasks(project.id, limit, offset)
             # Check if for the data we have to auto-throttle task update
-            sleep, msg = enable_auto_throttling(tasks)
+            sleep, msg = enable_auto_throttling(config, tasks)
             # If true, warn user
             if sleep:  # pragma: no cover
                 click.secho(msg, fg='yellow')
@@ -331,9 +332,9 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
                         t.n_answers = redundancy
                         response = config.pbclient.update_task(t)
                         check_api_error(response)
-                        # If auto-throttling enabled, sleep for 3 seconds
+                        # If auto-throttling enabled, sleep for sleep seconds
                         if sleep:  # pragma: no cover
-                            time.sleep(3)
+                            time.sleep(sleep)
                     offset += limit
                     tasks = config.pbclient.get_tasks(project.id, limit, offset)
                 return "All tasks redundancy have been updated"
@@ -413,14 +414,22 @@ def create_helping_material_info(helping):
     return helping_info, file_path
 
 
-def enable_auto_throttling(data, limit=299):
-    """Return True if more than 300 tasks have to be created."""
+def enable_auto_throttling(config, data, limit=299):
+    "Return sleep time if more tasks than those " \
+    "allowed by the server are requested."
+    # Ask server for limit
+    endpoint = config.server + "/api/project"
+    headers = requests.head(endpoint).headers
+    server_limit = int(headers.get('X-RateLimit-Limit', 0))
+    limit = config.limit or server_limit or limit
+    # Compute sleep time
+    sleep = 60.0 * 15.0 / limit
     msg = 'Warning: %s tasks to create.' \
           ' Auto-throttling enabled!' % len(data)
     if len(data) > limit:
-        return (True, msg)
+        return (sleep, msg)
     else:
-        return False, None
+        return 0, None
 
 
 def format_json_task(task_info):
