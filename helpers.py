@@ -30,6 +30,7 @@ import csv
 import json
 import time
 import click
+import datetime
 from StringIO import StringIO
 import polib
 import openpyxl
@@ -417,13 +418,21 @@ def create_helping_material_info(helping):
 def enable_auto_throttling(config, data, limit=299):
     "Return sleep time if more tasks than those " \
     "allowed by the server are requested."
-    # Ask server for limit
-    endpoint = config.server + "/api/project"
+    # Get header from server
+    endpoint = config.server + "/api/task"
     headers = requests.head(endpoint).headers
-    server_limit = int(headers.get('X-RateLimit-Limit', 0))
+    # Get limit
+    server_limit = int(headers.get('X-RateLimit-Remaining', 0))
     limit = config.limit or server_limit or limit
+    # Get reset time
+    reset_epoch = int(headers.get('X-RateLimit-Reset', 0))
+    reset_time = datetime.datetime(1970, 1, 1) + \
+                 datetime.timedelta(reset_epoch)
     # Compute sleep time
-    sleep = 60.0 * 15.0 / limit
+    remaining_time = (datetime.datetime.utcnow() - reset_time).seconds
+    remaining_time = max(remaining_time, 0) or (15 * 60)
+    sleep = float(remaining_time) / limit
+    # Check if auto-throttling must be enabled
     msg = 'Warning: %s tasks to create.' \
           ' Auto-throttling enabled!' % len(data)
     if len(data) > limit:
