@@ -423,7 +423,7 @@ def enable_auto_throttling(config, data, limit=299):
     headers = requests.head(endpoint).headers
     # Get limit
     server_limit = int(headers.get('X-RateLimit-Remaining', 0))
-    limit = config.limit or server_limit or limit
+    limit = server_limit or limit
     # Get reset time
     reset_epoch = int(headers.get('X-RateLimit-Reset', 0))
     reset_time = datetime.datetime(1970, 1, 1) + \

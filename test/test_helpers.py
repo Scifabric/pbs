@@ -107,8 +107,7 @@ class TestHelpers(TestDefault):
     def test_enable_auto_throttling(self, mock):
         """Test enable_auto_throttling works."""
         mock.return_value = MagicMock(['headers'])
-        config = MagicMock(['server', 'limit'])
-        config.limit = None
+        config = MagicMock(['server'])
 
         mock.return_value.headers = {'X-RateLimit-Remaining': 9}
         sleep, msg = enable_auto_throttling(config, range(10))
@@ -119,12 +118,6 @@ class TestHelpers(TestDefault):
         sleep, msg = enable_auto_throttling(config, range(10))
         assert sleep == 0, "Throttling should not be enabled"
         assert msg is None, "Throttling should not be enabled"
-
-        config.limit = 9
-        mock.return_value.headers = {}
-        sleep, msg = enable_auto_throttling(config, range(10))
-        assert sleep > 0, "Throttling should be enabled"
-        assert msg is not None, "Throttling should be enabled"
 
     def test_pbs_handler(self):
         """Test PbsHandler patterns works."""
