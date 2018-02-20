@@ -114,7 +114,7 @@ class TestHelpers(TestDefault):
         assert sleep > 0, "Throttling should be enabled"
         assert msg is not None, "Throttling should be enabled"
 
-        mock.return_value.headers = {'X-RateLimit-Limit': 10}
+        mock.return_value.headers = {'X-RateLimit-Remaining': 10}
         sleep, msg = enable_auto_throttling(config, range(10))
         assert sleep == 0, "Throttling should not be enabled"
         assert msg is None, "Throttling should not be enabled"
