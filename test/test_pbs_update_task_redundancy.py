@@ -21,8 +21,11 @@ class TestPbsUpdateTaskRedundancy(TestDefault):
             return []
 
     @patch('helpers.find_project_by_short_name')
-    def test_update_task_redundancy_individually(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_update_task_redundancy_individually(self, auto_mock, find_mock):
         """Test update task redundancy individually works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -38,8 +41,11 @@ class TestPbsUpdateTaskRedundancy(TestDefault):
         assert res == msg, res
 
     @patch('helpers.find_project_by_short_name')
-    def test_update_task_redundancy_all_tasks(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_update_task_redundancy_all_tasks(self, auto_mock, find_mock):
         """Test update task redundancy all tasks works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -58,8 +64,11 @@ class TestPbsUpdateTaskRedundancy(TestDefault):
 
 
     @patch('helpers.find_project_by_short_name')
-    def test_update_task_redundancy_fails(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_update_task_redundancy_fails(self, auto_mock, find_mock):
         """Test update task redundancy fails works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
