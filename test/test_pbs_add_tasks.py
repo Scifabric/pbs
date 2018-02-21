@@ -12,8 +12,11 @@ class TestPbsAddTask(TestDefault):
     """Test class for pbs add tasks commands."""
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_json_with_info(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_json_with_info(self, auto_mock, find_mock):
         """Test add_tasks json with info field works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -32,8 +35,11 @@ class TestPbsAddTask(TestDefault):
         assert res == '1 tasks added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_json_from_filextension(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_json_from_filextension(self, auto_mock, find_mock):
         """Test add_tasks json without specifying file extension works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -53,8 +59,10 @@ class TestPbsAddTask(TestDefault):
         assert res == '1 tasks added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_csv_with_info(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_csv_with_info(self, auto_mock, find_mock):
         """Test add_tasks csv with info field works."""
+        auto_mock.return_value = (0, None)
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -74,8 +82,11 @@ class TestPbsAddTask(TestDefault):
 
     @patch('helpers.openpyxl.load_workbook')
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_excel_with_info(self, find_mock, workbook_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_excel_with_info(self, auto_mock, find_mock, workbook_mock):
         """Test add_tasks excel with info field works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -112,8 +123,11 @@ class TestPbsAddTask(TestDefault):
         assert res == '8 tasks added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_csv_from_filextension(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_csv_from_filextension(self, auto_mock, find_mock):
         """Test add_tasks csv without specifying file extension works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -133,8 +147,11 @@ class TestPbsAddTask(TestDefault):
         assert res == '1 tasks added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_json_without_info(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_json_without_info(self, auto_mock, find_mock):
         """Test add_tasks json without info field works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -153,8 +170,11 @@ class TestPbsAddTask(TestDefault):
         assert res == '1 tasks added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_csv_without_info(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_csv_without_info(self, auto_mock, find_mock):
         """Test add_tasks csv without info field works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -173,8 +193,10 @@ class TestPbsAddTask(TestDefault):
         assert res == '1 tasks added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_unknow_type_from_filextension(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_unknow_type_from_filextension(self, auto_mock, find_mock):
         """Test add_tasks with unknown type from file extension works."""
+        auto_mock.return_value = (0, None)
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -195,8 +217,11 @@ class TestPbsAddTask(TestDefault):
                       "properties."), res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_unknow_type(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_unknow_type(self, auto_mock, find_mock):
         """Test add_tasks with unknown type works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -216,8 +241,11 @@ class TestPbsAddTask(TestDefault):
                       "properties."), res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_csv_connection_error(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_csv_connection_error(self, auto_mock, find_mock):
         """Test add_tasks csv connection error works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -236,8 +264,11 @@ class TestPbsAddTask(TestDefault):
         assert res == "Connection Error! The server http://server is not responding", res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_json_connection_error(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_json_connection_error(self, auto_mock, find_mock):
         """Test add_tasks json connection error works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -256,8 +287,11 @@ class TestPbsAddTask(TestDefault):
         assert res == "Connection Error! The server http://server is not responding", res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_another_error(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_another_error(self, auto_mock, find_mock):
         """Test add_tasks another error works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -277,8 +311,11 @@ class TestPbsAddTask(TestDefault):
 
     @patch('polib.pofile')
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_po_with_info(self, find_mock, po_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_po_with_info(self, auto_mock, find_mock, po_mock):
         """Test add_tasks po with info field works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -306,8 +343,11 @@ class TestPbsAddTask(TestDefault):
 
     @patch('polib.pofile')
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_po_from_filextension(self, find_mock, po_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_po_from_filextension(self, auto_mock, find_mock, po_mock):
         """Test add_tasks po without specifying file extension works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -335,8 +375,11 @@ class TestPbsAddTask(TestDefault):
         assert res == '1 tasks added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_properties_with_info(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_properties_with_info(self, auto_mock, find_mock):
         """Test add_tasks properties with info field works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -355,8 +398,11 @@ class TestPbsAddTask(TestDefault):
         assert res == '1 tasks added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_tasks_properties_from_filextension(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_tasks_properties_from_filextension(self, auto_mock, find_mock):
         """Test add_tasks properties without specifying file extension works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'

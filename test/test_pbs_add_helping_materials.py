@@ -12,8 +12,10 @@ class TestPbsAddHelpingMaterial(TestDefault):
     """Test class for pbs add helping materials commands."""
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_materials_json_with_info(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_materials_json_with_info(self, auto_mock, find_mock):
         """Test add_helpingmaterials json with info field works."""
+        auto_mock.return_value = (0, None)
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -32,8 +34,10 @@ class TestPbsAddHelpingMaterial(TestDefault):
         assert res == '1 helping materials added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_materials_json_from_filextension(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_materials_json_from_filextension(self, auto_mock, find_mock):
         """Test add_helpingmaterials json without specifying file extension works."""
+        auto_mock.return_value = (0, None)
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -53,8 +57,10 @@ class TestPbsAddHelpingMaterial(TestDefault):
         assert res == '1 helping materials added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_materials_csv_with_info(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_materials_csv_with_info(self, auto_mock, find_mock):
         """Test add_helpingmaterials csv with info field works."""
+        auto_mock.return_value = (0, None)
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -74,8 +80,10 @@ class TestPbsAddHelpingMaterial(TestDefault):
 
     @patch('helpers.openpyxl.load_workbook')
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_materials_excel_with_info(self, find_mock, workbook_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_materials_excel_with_info(self, auto_mock, find_mock, workbook_mock):
         """Test add_helpingmaterials excel with info field works."""
+        auto_mock.return_value = (0, None)
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -110,8 +118,12 @@ class TestPbsAddHelpingMaterial(TestDefault):
         assert res == '8 helping materials added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_materials_csv_from_filextension(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_materials_csv_from_filextension(self, auto_mock,
+                                                         find_mock):
         """Test add_helpingmaterials csv without specifying file extension works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -131,8 +143,11 @@ class TestPbsAddHelpingMaterial(TestDefault):
         assert res == '1 helping materials added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_materials_json_without_info(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_materials_json_without_info(self, auto_mock, find_mock):
         """Test add_heping_materials json without info field works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -151,8 +166,11 @@ class TestPbsAddHelpingMaterial(TestDefault):
         assert res == '1 helping materials added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_materials_csv_without_info(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_materials_csv_without_info(self, auto_mock, find_mock):
         """Test add_helpingmaterials csv without info field works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -171,8 +189,12 @@ class TestPbsAddHelpingMaterial(TestDefault):
         assert res == '1 helping materials added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_materials_unknow_type_from_filextension(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_materials_unknow_type_from_filextension(self,
+                                                                 auto_mock, 
+                                                                 find_mock):
         """Test add_helpingmaterials with unknown type from file extension works."""
+        auto_mock.return_value = (0, None)
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -193,8 +215,11 @@ class TestPbsAddHelpingMaterial(TestDefault):
                       "properties."), res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_materials_unknow_type(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_materials_unknow_type(self, auto_mock, find_mock):
         """Test add_helpingmaterials with unknown type works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -214,8 +239,11 @@ class TestPbsAddHelpingMaterial(TestDefault):
                       "properties."), res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_materials_csv_connection_error(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_materials_csv_connection_error(self, auto_mock, find_mock):
         """Test add_helpingmaterials csv connection error works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -234,8 +262,11 @@ class TestPbsAddHelpingMaterial(TestDefault):
         assert res == "Connection Error! The server http://server is not responding", res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_material_json_connection_error(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_material_json_connection_error(self, auto_mock, find_mock):
         """Test add_helpingmaterials json connection error works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -254,8 +285,10 @@ class TestPbsAddHelpingMaterial(TestDefault):
         assert res == "Connection Error! The server http://server is not responding", res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_helpingmaterial_another_error(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helpingmaterial_another_error(self, auto_mock, find_mock):
         """Test add_tasks another error works."""
+        auto_mock.return_value = (0, None)
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'
@@ -292,8 +325,11 @@ class TestPbsAddHelpingMaterial(TestDefault):
 
     @patch('helpers.openpyxl.load_workbook')
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_materials_excel_with_file(self, find_mock, workbook_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_materials_excel_with_file(self, auto_mock, find_mock, workbook_mock):
         """Test add_helpingmaterials excel with file_path field works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'

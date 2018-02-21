@@ -103,13 +103,20 @@ class TestHelpers(TestDefault):
         res = create_task_info(task)
         assert res == task
 
-    def test_enable_auto_throttling(self):
+    @patch('requests.head')
+    def test_enable_auto_throttling(self, mock):
         """Test enable_auto_throttling works."""
-        sleep, msg = enable_auto_throttling(range(10), 9)
-        assert sleep is True, "Throttling should be enabled"
+        mock.return_value = MagicMock(['headers'])
+        config = MagicMock(['server'])
+
+        mock.return_value.headers = {'X-RateLimit-Remaining': 9}
+        sleep, msg = enable_auto_throttling(config, range(10))
+        assert sleep > 0, "Throttling should be enabled"
         assert msg is not None, "Throttling should be enabled"
-        sleep, msg = enable_auto_throttling(range(10), 10)
-        assert sleep is False, "Throttling should not be enabled"
+
+        mock.return_value.headers = {'X-RateLimit-Remaining': 10}
+        sleep, msg = enable_auto_throttling(config, range(10))
+        assert sleep == 0, "Throttling should not be enabled"
         assert msg is None, "Throttling should not be enabled"
 
     def test_pbs_handler(self):
