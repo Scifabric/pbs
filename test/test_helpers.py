@@ -53,6 +53,11 @@ class TestHelpers(TestDefault):
         error = dict(status='failed', target='diff', exception_cls='err')
         assert_raises(exceptions.HTTPError, check_api_error, error)
 
+    def test_check_general_http_api_error_raises_exception(self):
+        """Test check_api_error raises HTTPError exception."""
+        error = dict(code=500)
+        assert_raises(exceptions.HTTPError, check_api_error, error)
+
     def test_check_api_error_raises_database_error(self):
         """Test check_api_error raises DatabaseError exception."""
         error = dict(status='failed', target='diff',

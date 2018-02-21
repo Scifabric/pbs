@@ -302,6 +302,19 @@ helping materials file.
     pbs add_helpingmaterials --help
 ```
 
+## Running the Tests
+
+To run the test suite for pbs, first install [note](https://nose.readthedocs.io/en/latest/):
+ 
+```bash
+apt-get install python-nose
+```
+
+To run all tests, execute the following from the pbs project directory:
+
+```bash
+nosetests test
+```
 
 # Documentation
 

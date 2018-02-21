@@ -365,7 +365,12 @@ def find_project_by_short_name(short_name, pbclient, all=None):
 
 
 def check_api_error(api_response):
+    print(api_response)
     """Check if returned API response contains an error."""
+    if type(api_response) == dict and 'code' in api_response and api_response['code'] <> 200:
+            print("Server response code: %s" % api_response['code'])
+            print("Server response: %s" % api_response)
+            raise exceptions.HTTPError('Unexpected response', response=api_response)
     if type(api_response) == dict and (api_response.get('status') == 'failed'):
         if 'ProgrammingError' in api_response.get('exception_cls'):
             raise DatabaseError(message='PyBossa database error.',
@@ -381,7 +386,8 @@ def check_api_error(api_response):
             raise TaskNotFound(message='PyBossa Task not found',
                                error=api_response)
         else:
-            raise exceptions.HTTPError
+            print("Server response: %s" % api_response)
+            raise exceptions.HTTPError('Unexpected response', response=api_response)
 
 
 def format_error(module, error):

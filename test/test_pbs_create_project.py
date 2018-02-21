@@ -16,7 +16,7 @@ class TestPbsCreateProject(TestDefault):
     def test_create_project_create(self):
         """Test create_project works."""
         pbclient = MagicMock()
-        pbclient.create_project.return_value = {'short_name': 'short_name'}
+        pbclient.create_project.return_value = {'short_name': 'short_name', 'status_code': 200}
         self.config.pbclient = pbclient
         res = _create_project(self.config)
         assert res == 'Project: short_name created!', res
