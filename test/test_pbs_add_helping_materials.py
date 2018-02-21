@@ -110,8 +110,12 @@ class TestPbsAddHelpingMaterial(TestDefault):
         assert res == '8 helping materials added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
-    def test_add_helping_materials_csv_from_filextension(self, find_mock):
+    @patch('helpers.enable_auto_throttling')
+    def test_add_helping_materials_csv_from_filextension(self, auto_mock,
+                                                         find_mock):
         """Test add_helpingmaterials csv without specifying file extension works."""
+        auto_mock.return_value = (0, None)
+
         project = MagicMock()
         project.name = 'name'
         project.short_name = 'short_name'

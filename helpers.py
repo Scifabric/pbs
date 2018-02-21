@@ -239,7 +239,9 @@ def _add_helpingmaterials(config, helping_file, helping_type):
             return ("Unknown format for the tasks file. Use json, csv, po or "
                     "properties.")
         # Check if for the data we have to auto-throttle task creation
-        sleep, msg = enable_auto_throttling(config, data)
+        print enable_auto_throttling
+        sleep, msg = enable_auto_throttling(config, data,
+                                            endpoint='/api/helpinmaterial')
         # If true, warn user
         if sleep:  # pragma: no cover
             click.secho(msg, fg='yellow')
@@ -415,11 +417,12 @@ def create_helping_material_info(helping):
     return helping_info, file_path
 
 
-def enable_auto_throttling(config, data, limit=299):
+def enable_auto_throttling(config, data, limit=299, endpoint='/api/task'):
     "Return sleep time if more tasks than those " \
     "allowed by the server are requested."
     # Get header from server
-    endpoint = config.server + "/api/task"
+    endpoint = config.server + endpoint
+    print requests.head
     headers = requests.head(endpoint).headers
     # Get limit
     server_limit = int(headers.get('X-RateLimit-Remaining', 0))
