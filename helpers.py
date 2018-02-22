@@ -204,8 +204,6 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         if len(data) == 0:
             return ("Unknown format for the tasks file. Use json, csv, po or "
                     "properties.")
-        # Check if for the data we have to auto-throttle task creation
-        sleep, msg = enable_auto_throttling(config, data)
         # If true, warn user
         # if sleep:  # pragma: no cover
         #     click.secho(msg, fg='yellow')
@@ -218,6 +216,7 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                        n_answers=redundancy,
                                                        priority_0=priority)
 
+                # Check if for the data we have to auto-throttle task creation
                 sleep, msg = enable_auto_throttling(config, data)
                 check_api_error(response)
                 # If auto-throttling enabled, sleep for sleep seconds
@@ -241,13 +240,6 @@ def _add_helpingmaterials(config, helping_file, helping_type):
         if len(data) == 0:
             return ("Unknown format for the tasks file. Use json, csv, po or "
                     "properties.")
-        # Check if for the data we have to auto-throttle task creation
-        print enable_auto_throttling
-        sleep, msg = enable_auto_throttling(config, data,
-                                            endpoint='/api/helpinmaterial')
-        # If true, warn user
-        if sleep:  # pragma: no cover
-            click.secho(msg, fg='yellow')
         # Show progress bar
         with click.progressbar(data, label="Adding Helping Materials") as pgbar:
             for d in pgbar:
@@ -268,6 +260,12 @@ def _add_helpingmaterials(config, helping_file, helping_type):
                     response = config.pbclient.create_helpingmaterial(project_id=project.id,
                                                                       info=helping_info)
                 check_api_error(response)
+                # Check if for the data we have to auto-throttle task creation
+                sleep, msg = enable_auto_throttling(config, data,
+                                                    endpoint='/api/helpinmaterial')
+                # If true, warn user
+                if sleep:  # pragma: no cover
+                    click.secho(msg, fg='yellow')
                 # If auto-throttling enabled, sleep for sleep seconds
                 if sleep:  # pragma: no cover
                     time.sleep(sleep)
@@ -327,17 +325,14 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
             limit = limit
             offset = offset
             tasks = config.pbclient.get_tasks(project.id, limit, offset)
-            # Check if for the data we have to auto-throttle task update
-            sleep, msg = enable_auto_throttling(config, tasks)
-            # If true, warn user
-            if sleep:  # pragma: no cover
-                click.secho(msg, fg='yellow')
             with click.progressbar(tasks, label="Updating Tasks") as pgbar:
                 while len(tasks) > 0:
                     for t in pgbar:
                         t.n_answers = redundancy
                         response = config.pbclient.update_task(t)
                         check_api_error(response)
+                        # Check if for the data we have to auto-throttle task update
+                        sleep, msg = enable_auto_throttling(config, tasks)
                         # If auto-throttling enabled, sleep for sleep seconds
                         if sleep:  # pragma: no cover
                             time.sleep(sleep)
