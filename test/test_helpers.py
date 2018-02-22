@@ -7,6 +7,8 @@ from mock import patch, MagicMock
 from nose.tools import assert_raises
 from requests import exceptions
 from pbsexceptions import *
+import calendar
+import datetime
 
 
 class TestHelpers(TestDefault):
@@ -114,12 +116,15 @@ class TestHelpers(TestDefault):
         mock.return_value = MagicMock(['headers'])
         config = MagicMock(['server'])
 
-        mock.return_value.headers = {'X-RateLimit-Remaining': 9}
+        now = calendar.timegm(datetime.datetime.utcnow().utctimetuple()) + 10
+
+        mock.return_value.headers = {'X-RateLimit-Remaining': 9,
+                                     'X-RateLimit-Reset': now}
         sleep, msg = enable_auto_throttling(config, range(10))
         assert sleep > 0, "Throttling should be enabled"
         assert msg is not None, "Throttling should be enabled"
 
-        mock.return_value.headers = {'X-RateLimit-Remaining': 10}
+        mock.return_value.headers = {'X-RateLimit-Remaining': 11}
         sleep, msg = enable_auto_throttling(config, range(10))
         assert sleep == 0, "Throttling should not be enabled"
         assert msg is None, "Throttling should not be enabled"

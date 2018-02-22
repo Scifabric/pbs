@@ -41,6 +41,7 @@ from pbsexceptions import *
 import logging
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
+import calendar
 
 
 __all__ = ['find_project_by_short_name', 'check_api_error',
@@ -203,11 +204,9 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         if len(data) == 0:
             return ("Unknown format for the tasks file. Use json, csv, po or "
                     "properties.")
-        # Check if for the data we have to auto-throttle task creation
-        sleep, msg = enable_auto_throttling(config, data)
         # If true, warn user
-        if sleep:  # pragma: no cover
-            click.secho(msg, fg='yellow')
+        # if sleep:  # pragma: no cover
+        #     click.secho(msg, fg='yellow')
         # Show progress bar
         with click.progressbar(data, label="Adding Tasks") as pgbar:
             for d in pgbar:
@@ -216,6 +215,9 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                        info=task_info,
                                                        n_answers=redundancy,
                                                        priority_0=priority)
+
+                # Check if for the data we have to auto-throttle task creation
+                sleep, msg = enable_auto_throttling(config, data)
                 check_api_error(response)
                 # If auto-throttling enabled, sleep for sleep seconds
                 if sleep:  # pragma: no cover
@@ -238,13 +240,6 @@ def _add_helpingmaterials(config, helping_file, helping_type):
         if len(data) == 0:
             return ("Unknown format for the tasks file. Use json, csv, po or "
                     "properties.")
-        # Check if for the data we have to auto-throttle task creation
-        print enable_auto_throttling
-        sleep, msg = enable_auto_throttling(config, data,
-                                            endpoint='/api/helpinmaterial')
-        # If true, warn user
-        if sleep:  # pragma: no cover
-            click.secho(msg, fg='yellow')
         # Show progress bar
         with click.progressbar(data, label="Adding Helping Materials") as pgbar:
             for d in pgbar:
@@ -265,6 +260,12 @@ def _add_helpingmaterials(config, helping_file, helping_type):
                     response = config.pbclient.create_helpingmaterial(project_id=project.id,
                                                                       info=helping_info)
                 check_api_error(response)
+                # Check if for the data we have to auto-throttle task creation
+                sleep, msg = enable_auto_throttling(config, data,
+                                                    endpoint='/api/helpinmaterial')
+                # If true, warn user
+                if sleep:  # pragma: no cover
+                    click.secho(msg, fg='yellow')
                 # If auto-throttling enabled, sleep for sleep seconds
                 if sleep:  # pragma: no cover
                     time.sleep(sleep)
@@ -324,17 +325,14 @@ def _update_tasks_redundancy(config, task_id, redundancy, limit=300, offset=0):
             limit = limit
             offset = offset
             tasks = config.pbclient.get_tasks(project.id, limit, offset)
-            # Check if for the data we have to auto-throttle task update
-            sleep, msg = enable_auto_throttling(config, tasks)
-            # If true, warn user
-            if sleep:  # pragma: no cover
-                click.secho(msg, fg='yellow')
             with click.progressbar(tasks, label="Updating Tasks") as pgbar:
                 while len(tasks) > 0:
                     for t in pgbar:
                         t.n_answers = redundancy
                         response = config.pbclient.update_task(t)
                         check_api_error(response)
+                        # Check if for the data we have to auto-throttle task update
+                        sleep, msg = enable_auto_throttling(config, tasks)
                         # If auto-throttling enabled, sleep for sleep seconds
                         if sleep:  # pragma: no cover
                             time.sleep(sleep)
@@ -428,23 +426,19 @@ def enable_auto_throttling(config, data, limit=299, endpoint='/api/task'):
     "allowed by the server are requested."
     # Get header from server
     endpoint = config.server + endpoint
-    print requests.head
     headers = requests.head(endpoint).headers
     # Get limit
     server_limit = int(headers.get('X-RateLimit-Remaining', 0))
     limit = server_limit or limit
     # Get reset time
     reset_epoch = int(headers.get('X-RateLimit-Reset', 0))
-    reset_time = datetime.datetime(1970, 1, 1) + \
-                 datetime.timedelta(reset_epoch)
     # Compute sleep time
-    remaining_time = (datetime.datetime.utcnow() - reset_time).seconds
-    remaining_time = max(remaining_time, 0) or (15 * 60)
-    sleep = float(remaining_time) / limit
-    # Check if auto-throttling must be enabled
-    msg = 'Warning: %s tasks to create.' \
-          ' Auto-throttling enabled!' % len(data)
-    if len(data) > limit:
+    sleep = (reset_epoch -
+             calendar.timegm(datetime.datetime.utcnow().utctimetuple()))
+    msg = 'Warning: %s remaining hits to the endpoint.' \
+          ' Auto-throttling enabled!' % limit
+    # If we have less than 10 hits on the endpoint, sleep
+    if limit <= 10:
         return (sleep, msg)
     else:
         return 0, None
