@@ -437,8 +437,6 @@ def enable_auto_throttling(config, data, limit=299, endpoint='/api/task'):
     limit = server_limit or limit
     # Get reset time
     reset_epoch = int(headers.get('X-RateLimit-Reset', 0))
-    reset_time = datetime.datetime(1970, 1, 1) + \
-                 datetime.timedelta(seconds=reset_epoch)
     # Compute sleep time
     sleep = (reset_epoch -
              calendar.timegm(datetime.datetime.utcnow().utctimetuple()))
