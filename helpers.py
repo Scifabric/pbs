@@ -41,6 +41,7 @@ from pbsexceptions import *
 import logging
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
+import calendar
 
 
 __all__ = ['find_project_by_short_name', 'check_api_error',
@@ -206,8 +207,8 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
         # Check if for the data we have to auto-throttle task creation
         sleep, msg = enable_auto_throttling(config, data)
         # If true, warn user
-        if sleep:  # pragma: no cover
-            click.secho(msg, fg='yellow')
+        # if sleep:  # pragma: no cover
+        #     click.secho(msg, fg='yellow')
         # Show progress bar
         with click.progressbar(data, label="Adding Tasks") as pgbar:
             for d in pgbar:
@@ -216,6 +217,8 @@ def _add_tasks(config, tasks_file, tasks_type, priority, redundancy):
                                                        info=task_info,
                                                        n_answers=redundancy,
                                                        priority_0=priority)
+
+                sleep, msg = enable_auto_throttling(config, data)
                 check_api_error(response)
                 # If auto-throttling enabled, sleep for sleep seconds
                 if sleep:  # pragma: no cover
@@ -428,7 +431,6 @@ def enable_auto_throttling(config, data, limit=299, endpoint='/api/task'):
     "allowed by the server are requested."
     # Get header from server
     endpoint = config.server + endpoint
-    print requests.head
     headers = requests.head(endpoint).headers
     # Get limit
     server_limit = int(headers.get('X-RateLimit-Remaining', 0))
@@ -436,15 +438,14 @@ def enable_auto_throttling(config, data, limit=299, endpoint='/api/task'):
     # Get reset time
     reset_epoch = int(headers.get('X-RateLimit-Reset', 0))
     reset_time = datetime.datetime(1970, 1, 1) + \
-                 datetime.timedelta(reset_epoch)
+                 datetime.timedelta(seconds=reset_epoch)
     # Compute sleep time
-    remaining_time = (datetime.datetime.utcnow() - reset_time).seconds
-    remaining_time = max(remaining_time, 0) or (15 * 60)
-    sleep = float(remaining_time) / limit
-    # Check if auto-throttling must be enabled
-    msg = 'Warning: %s tasks to create.' \
-          ' Auto-throttling enabled!' % len(data)
-    if len(data) > limit:
+    sleep = (reset_epoch -
+             calendar.timegm(datetime.datetime.utcnow().utctimetuple()))
+    msg = 'Warning: %s remaining hits to the endpoint.' \
+          ' Auto-throttling enabled!' % limit
+    # If we have less than 10 hits on the endpoint, sleep
+    if limit <= 10:
         return (sleep, msg)
     else:
         return 0, None
