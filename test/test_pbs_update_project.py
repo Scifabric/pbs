@@ -88,5 +88,5 @@ class TestPbsUpdateProject(TestDefault):
         res = _update_project(self.config, task_presenter, results,
                               long_description, tutorial)
         msg = ("Project not found! The project: short_name is missing." \
-               " Use the flag --arg=1 to search in all the server ")
+               " Use the flag --all=1 to search in all the server ")
         assert res == msg, msg
