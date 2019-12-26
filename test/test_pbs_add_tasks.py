@@ -104,17 +104,21 @@ class TestPbsAddTask(TestDefault):
 
         ws.append([None, None])
         ws.append([None, None])
+        file_name = '/tmp/tasks.xlsx'
+        wb.save(file_name)
+
+        file_handler = open(file_name)
 
         find_mock.return_value = project
 
         tasks = MagicMock()
-        tasks.read.return_value = wb
+        tasks.read.return_value = file_handler
 
         workbook_mock.return_value = wb
 
         pbclient = MagicMock()
         self.config.pbclient = pbclient
-        res = _add_tasks(self.config, tasks, 'xlsx', 0, 30)
+        res = _add_tasks(self.config, file_handler, 'xlsx', 0, 30)
         self.config.pbclient.create_task.assert_called_with(project_id=find_mock().id,
                                                             info={'column_name': 'value',
                                                                   'foo': 'bar'},
