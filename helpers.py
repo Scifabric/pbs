@@ -31,7 +31,7 @@ import json
 import time
 import click
 import datetime
-from StringIO import StringIO
+from io import StringIO
 import polib
 import openpyxl
 import itertools
@@ -140,25 +140,25 @@ def _update_project(config, task_presenter, results,
 
 def _load_data(data_file, data_type):
     """Load data from CSV, JSON, Excel, ..., formats."""
-    raw_data = data_file.read()
     if data_type is None:
         data_type = data_file.name.split('.')[-1]
     # Data list to process
     data = []
     # JSON type
     if data_type == 'json':
+        raw_data = data_file.read()
         data = json.loads(raw_data)
         return data
     # CSV type
     elif data_type == 'csv':
+        raw_data = data_file.read()
         csv_data = StringIO(raw_data)
         reader = csv.DictReader(csv_data, delimiter=',')
         for line in reader:
             data.append(line)
         return data
     elif data_type in ['xlsx', 'xlsm', 'xltx', 'xltm']:
-        excel_data = StringIO(raw_data)
-        wb = openpyxl.load_workbook(excel_data)
+        wb = openpyxl.load_workbook(data_file)
         ws = wb.active
         # First headers
         headers = []
@@ -167,22 +167,24 @@ def _load_data(data_file, data_type):
                 tmp = '_'.join(cell.value.split(" ")).lower()
                 headers.append(tmp)
         # Simulate DictReader
-        for row in ws.iter_rows(row_offset=1):
+        for row in ws.iter_rows(min_row=2):
             values = []
             for cell in row:
                 values.append(cell.value)
-            tmp = dict(itertools.izip(headers, values))
+            tmp = dict(list(zip(headers, values)))
             if len(values) == len(headers) and not row_empty(values):
                 data.append(tmp)
         return data
     # PO type
     elif data_type == 'po':
+        raw_data = data_file.read()
         po = polib.pofile(raw_data)
         for entry in po.untranslated_entries():
             data.append(entry.__dict__)
         return data
     # PROPERTIES type (used in Java and Firefox extensions)
     elif data_type == 'properties':
+        raw_data = data_file.read()
         lines = raw_data.split('\n')
         for l in lines:
             if l:
@@ -365,9 +367,9 @@ def find_project_by_short_name(short_name, pbclient, all=None):
 def check_api_error(api_response):
     print(api_response)
     """Check if returned API response contains an error."""
-    if type(api_response) == dict and 'code' in api_response and api_response['code'] <> 200:
-            print("Server response code: %s" % api_response['code'])
-            print("Server response: %s" % api_response)
+    if type(api_response) == dict and 'code' in api_response and api_response['code'] != 200:
+            print(("Server response code: %s" % api_response['code']))
+            print(("Server response: %s" % api_response))
             raise exceptions.HTTPError('Unexpected response', response=api_response)
     if type(api_response) == dict and (api_response.get('status') == 'failed'):
         if 'ProgrammingError' in api_response.get('exception_cls'):
@@ -384,7 +386,7 @@ def check_api_error(api_response):
             raise TaskNotFound(message='PyBossa Task not found',
                                error=api_response)
         else:
-            print("Server response: %s" % api_response)
+            print(("Server response: %s" % api_response))
             raise exceptions.HTTPError('Unexpected response', response=api_response)
 
 
@@ -392,8 +394,8 @@ def format_error(module, error):
     """Format the error for the given module."""
     logging.error(module)
     # Beautify JSON error
-    print error.message
-    print json.dumps(error.error, sort_keys=True, indent=4, separators=(',', ': '))
+    print((error.message))
+    print((json.dumps(error.error, sort_keys=True, indent=4, separators=(',', ': '))))
     exit(1)
 
 
