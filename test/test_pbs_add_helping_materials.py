@@ -113,8 +113,8 @@ class TestPbsAddHelpingMaterial(TestDefault):
         self.config.pbclient = pbclient
         res = _add_helpingmaterials(self.config, helpingmaterials, 'xlsx')
         self.config.pbclient.create_helpingmaterial.assert_called_with(project_id=find_mock().id,
-                                                                       info={u'column_name': u'value',
-                                                                             u'foo': u'bar'})
+                                                                       info={'column_name': 'value',
+                                                                             'foo': 'bar'})
         assert res == '8 helping materials added to project: short_name', res
 
     @patch('helpers.find_project_by_short_name')
@@ -364,8 +364,8 @@ class TestPbsAddHelpingMaterial(TestDefault):
         res = _add_helpingmaterials(self.config, helpingmaterials, 'xlsx')
         self.config.pbclient.create_helpingmaterial.assert_called_with(project_id=find_mock().id,
                                                                        file_path='/tmp/file.jpg',
-                                                                       info={u'column_name': u'value',
-                                                                             u'foo': u'bar'})
+                                                                       info={'column_name': 'value',
+                                                                             'foo': 'bar'})
         self.config.pbclient.update_helping_material.assert_called_with(hm)
 
         assert res == '8 helping materials added to project: short_name', res

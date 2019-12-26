@@ -116,8 +116,8 @@ class TestPbsAddTask(TestDefault):
         self.config.pbclient = pbclient
         res = _add_tasks(self.config, tasks, 'xlsx', 0, 30)
         self.config.pbclient.create_task.assert_called_with(project_id=find_mock().id,
-                                                            info={u'column_name': u'value',
-                                                                  u'foo': u'bar'},
+                                                            info={'column_name': 'value',
+                                                                  'foo': 'bar'},
                                                             n_answers=30,
                                                             priority_0=0)
         assert res == '8 tasks added to project: short_name', res
