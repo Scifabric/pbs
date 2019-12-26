@@ -171,7 +171,7 @@ def _load_data(data_file, data_type):
             values = []
             for cell in row:
                 values.append(cell.value)
-            tmp = dict(zip(headers, values))
+            tmp = dict(list(zip(headers, values)))
             if len(values) == len(headers) and not row_empty(values):
                 data.append(tmp)
         return data
@@ -392,8 +392,8 @@ def format_error(module, error):
     """Format the error for the given module."""
     logging.error(module)
     # Beautify JSON error
-    print(error.message)
-    print(json.dumps(error.error, sort_keys=True, indent=4, separators=(',', ': ')))
+    print((error.message))
+    print((json.dumps(error.error, sort_keys=True, indent=4, separators=(',', ': '))))
     exit(1)
 
 
